@@ -363,11 +363,6 @@
   }
 }
 
-min-height: 100vh;
-display: flex;
-flex-direction: column;
-}
-
 /* Header with Apple-style Blur Effect */
 .header-blur {
   position: sticky;
