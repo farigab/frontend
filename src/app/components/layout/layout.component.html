@@ -1,0 +1,103 @@
+<div class="layout-container">
+  <!-- Apple-style Header -->
+  <header class="apple-header">
+    <div class="header-content">
+      <div class="logo-section">
+        <i class="pi pi-trophy logo-icon"></i>
+        <span class="logo-text">BragDoc</span>
+      </div>
+
+      <nav class="desktop-nav">
+        @for (item of menuItems; track item.label) {
+        @if (item.routerLink) {
+        <a [routerLink]="item.routerLink" routerLinkActive="active" class="nav-link" pRipple>
+          <i [class]="item.icon"></i>
+          <span>{{ item.label }}</span>
+        </a>
+        } @else if (item.items) {
+        <div class="nav-dropdown">
+          <button class="nav-link" pRipple>
+            <i [class]="item.icon"></i>
+            <span>{{ item.label }}</span>
+            <i class="pi pi-chevron-down"></i>
+          </button>
+          <div class="dropdown-content">
+            @for (subItem of item.items; track subItem.label) {
+            <a [routerLink]="subItem.routerLink" routerLinkActive="active" class="dropdown-item" pRipple>
+              <i [class]="subItem.icon"></i>
+              <span>{{ subItem.label }}</span>
+            </a>
+            }
+          </div>
+        </div>
+        }
+        }
+      </nav>
+
+      <button class="mobile-menu-btn" (click)="toggleSidebar()" pButton icon="pi pi-bars" [text]="true">
+      </button>
+    </div>
+  </header>
+
+  <!-- Mobile Sidebar -->
+  <p-sidebar [(visible)]="sidebarVisible" [position]="'right'" [showCloseIcon]="true" [style]="{ width: '280px' }">
+    <ng-template pTemplate="header">
+      <div class="sidebar-header">
+        <i class="pi pi-trophy"></i>
+        <span>BragDoc</span>
+      </div>
+    </ng-template>
+
+    <nav class="mobile-nav">
+      @for (item of menuItems; track item.label) {
+      @if (item.routerLink) {
+      <a [routerLink]="item.routerLink" routerLinkActive="active" class="mobile-nav-item" (click)="toggleSidebar()"
+        pRipple>
+        <i [class]="item.icon"></i>
+        <span>{{ item.label }}</span>
+      </a>
+      } @else if (item.items) {
+      <div class="mobile-nav-group">
+        <div class="mobile-nav-group-label">
+          <i [class]="item.icon"></i>
+          <span>{{ item.label }}</span>
+        </div>
+        @for (subItem of item.items; track subItem.label) {
+        <a [routerLink]="subItem.routerLink" routerLinkActive="active" class="mobile-nav-subitem"
+          (click)="toggleSidebar()" pRipple>
+          <i [class]="subItem.icon"></i>
+          <span>{{ subItem.label }}</span>
+        </a>
+        }
+      </div>
+      }
+      }
+    </nav>
+  </p-sidebar>
+
+  <!-- Main Content -->
+  <main class="main-content">
+    <router-outlet></router-outlet>
+  </main>
+
+  <!-- Apple-style Footer -->
+  <footer class="apple-footer">
+    <div class="footer-content">
+      <div class="footer-brand">
+        <i class="pi pi-trophy"></i>
+        <span>BragDoc</span>
+        <p class="footer-tagline">Track Your Professional Achievements</p>
+      </div>
+      <div class="footer-links">
+        @for (item of menuItems; track item.label) {
+        @if (item.routerLink) {
+        <a [routerLink]="item.routerLink" class="footer-link">{{ item.label }}</a>
+        }
+        }
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2026 BragDoc. All rights reserved.</p>
+    </div>
+  </footer>
+</div>
