@@ -398,6 +398,24 @@ body {
   padding: var(--spacing-xl);
 }
 
+/* Ensure PrimeNG overlays (datepicker, overlaypanel, dialogs) appear above other UI elements */
+.p-datepicker,
+.p-datepicker-panel,
+.p-overlaypanel,
+.p-dialog,
+.p-overlaypanel,
+.p-tooltip,
+.p-calendar {
+  z-index: 99999 !important;
+}
+
+/* Some PrimeNG versions use specific classes for overlay containers */
+.p-overlay-wrapper,
+.p-overlaypanel-wrapper,
+.p-datepicker-wrapper {
+  z-index: 99999 !important;
+}
+
 /* Typography */
 h1,
 h2,

@@ -59,6 +59,12 @@ export class LayoutComponent {
       icon: 'pi pi-chart-bar',
       routerLink: '/reports'
     }
+    ,
+    {
+      label: 'GitHub Import',
+      icon: 'pi pi-upload',
+      routerLink: '/github-import'
+    }
   ];
 
   protected toggleSidebar(): void {

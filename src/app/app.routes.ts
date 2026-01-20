@@ -31,6 +31,10 @@ export const routes: Routes = [
     loadComponent: () => import('./components/reports/reports.component').then(m => m.ReportsComponent)
   },
   {
+    path: 'github-import',
+    loadComponent: () => import('./components/github-import/github-import.component').then(m => m.GithubImportComponent)
+  },
+  {
     path: '**',
     redirectTo: '/dashboard'
   }
