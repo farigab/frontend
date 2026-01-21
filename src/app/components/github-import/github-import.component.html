@@ -1,41 +1,58 @@
+<p-toast />
+
 <div class="import-container">
-  @if (!repositories().length) {
+  <!-- Step 1: Token Input -->
+  @if (currentStep() === 'token') {
   <p-card>
     <div class="import-header">
       <div class="steps">
-        <div class="step">✔</div>
+        <div class="step active">1</div>
         <div class="step">2</div>
+        <div class="step">3</div>
       </div>
       <div class="spacer"></div>
     </div>
 
-    <h2 class="section-title">Which repositories to include?</h2>
+    <h2 class="section-title">Connect GitHub Account</h2>
     <p class="subtitle">
-      Select specific repositories or leave empty to include all
+      Enter your Personal Access Token to get started
     </p>
 
     <div class="form-row">
       <label for="token-input">Personal Access Token</label>
-      <input pInputText id="token-input" type="text" [value]="token()" (input)="token.set($any($event.target).value)"
-        placeholder="ghp_xxxxxxxxxxxxxxxxxxxx" aria-describedby="token-help" />
+      <input pInputText id="token-input" type="text" [(ngModel)]="token" placeholder="ghp_xxxxxxxxxxxxxxxxxxxx"
+        aria-describedby="token-help" />
       <small id="token-help" class="help-text">
-        Create a token at <a
-          href="https://github.com/settings/tokens/new?scopes=repo,read:user&description=farigab-bragdoc"
-          target="_blank" rel="noopener noreferrer">GitHub Settings</a> with repo scope
+        Create a token at
+        <a href="https://github.com/settings/tokens/new?scopes=repo,read:user&description=farigab-bragdoc"
+          target="_blank" rel="noopener noreferrer">
+          GitHub Settings
+        </a>
+        with repo scope
       </small>
     </div>
 
     <div class="buttons">
-      <button pButton label="Connect" icon="pi pi-github" (click)="saveToken()" class="p-button-secondary"
-        [loading]="loading().repos"></button>
+      <p-button label="Connect" icon="pi pi-github" (onClick)="saveToken()" severity="secondary"
+        [loading]="loading().repos" />
     </div>
   </p-card>
   }
 
-  @if (repositories().length) {
+  <!-- Step 2: Repository Selection -->
+  @if (currentStep() === 'repositories') {
   <p-card>
+    <div class="import-header">
+      <div class="steps">
+        <div class="step completed">✓</div>
+        <div class="step active">2</div>
+        <div class="step">3</div>
+      </div>
+      <div class="spacer"></div>
+    </div>
+
     <div class="card-header">
-      <h3>Which repositories to include?</h3>
+      <h2 class="section-title">Select Repositories</h2>
       <div class="repo-actions">
         <button type="button" class="link-button" (click)="selectAll()" aria-label="Select all repositories">
           Select All
@@ -47,7 +64,11 @@
     </div>
 
     <p class="subtitle">
-      Select specific repositories or leave empty to include all
+      @if (selectedCount() > 0) {
+      {{ selectedCount() }} {{ selectedCount() === 1 ? 'repository' : 'repositories' }} selected
+      } @else {
+      All repositories will be included
+      }
     </p>
 
     <div class="repo-grid" role="list">
@@ -63,19 +84,114 @@
     </div>
 
     <div class="repo-footer">
-      <button pButton label="Back" class="p-button-outlined" (click)="clearToken()"></button>
+      <p-button label="Back" severity="secondary" [outlined]="true" (onClick)="clearToken()" />
+      <p-button label="Continue" (onClick)="continueToDateRange()" />
+    </div>
+  </p-card>
+  }
+
+  <!-- Step 3: Date Range Selection -->
+  @if (currentStep() === 'dateRange') {
+  <p-card>
+    <div class="import-header">
+      <div class="steps">
+        <div class="step completed">✓</div>
+        <div class="step completed">✓</div>
+        <div class="step active">3</div>
+      </div>
+      <div class="spacer"></div>
+    </div>
+
+    <h2 class="section-title">Select Date Range</h2>
+    <p class="subtitle">
+      Choose the time period for importing data
+    </p>
+
+    <div class="date-range-container">
+      <div class="form-row">
+        <label for="start-date">Start Date</label>
+        <p-datepicker inputId="start-date" [(ngModel)]="startDate" dateFormat="yy-mm-dd" [showIcon]="true"
+          placeholder="Select start date" [maxDate]="endDate() ?? maxDate" [iconDisplay]="'input'"
+          aria-label="Start date" />
+      </div>
+
+      <div class="form-row">
+        <label for="end-date">End Date</label>
+        <p-datepicker inputId="end-date" [(ngModel)]="endDate" dateFormat="yy-mm-dd" [showIcon]="true"
+          placeholder="Select end date" [minDate]="startDate()" [maxDate]="maxDate" [iconDisplay]="'input'"
+          aria-label="End date" />
+      </div>
+    </div>
+
+    <div class="summary-section">
+      <h3>Import Summary</h3>
+      <ul class="summary-list">
+        <li>
+          <strong>Repositories:</strong>
+          @if (selectedCount() > 0) {
+          {{ selectedCount() }} selected
+          } @else {
+          All ({{ repositories().length }})
+          }
+        </li>
+        @if (hasDateRange()) {
+        <li>
+          <strong>Date Range:</strong>
+          {{ startDate()!.toLocaleDateString() }} - {{ endDate()!.toLocaleDateString() }}
+        </li>
+        }
+      </ul>
+    </div>
+
+    <div class="repo-footer">
+      <p-button label="Back" severity="secondary" [outlined]="true" (onClick)="backToRepositories()"
+        [disabled]="isImporting()" />
       <div class="footer-actions">
-        <div class="timer" aria-live="polite">~30 seconds to generate</div>
-        <button pButton label="Continue" (click)="continueWithSelection()"></button>
+        <div class="timer" aria-live="polite">
+          @if (isImporting()) {
+          Importing data...
+          } @else {
+          ~30 seconds to generate
+          }
+        </div>
+        <p-button label="Start Import" icon="pi pi-download" (onClick)="startImport()" [disabled]="!hasDateRange()"
+          [loading]="isImporting()" />
       </div>
     </div>
   </p-card>
   }
 
-  @if (result()) {
+  <!-- Step 4: Complete -->
+  @if (currentStep() === 'complete') {
   <p-card>
-    <h3>Result</h3>
-    <pre>{{ result() | json }}</pre>
+    <div class="import-header">
+      <div class="steps">
+        <div class="step completed">✓</div>
+        <div class="step completed">✓</div>
+        <div class="step completed">✓</div>
+      </div>
+      <div class="spacer"></div>
+    </div>
+
+    <div class="success-container">
+      <i class="pi pi-check-circle success-icon" aria-hidden="true"></i>
+      <h2 class="section-title">Import Complete!</h2>
+      <p class="subtitle">
+        Your GitHub data has been successfully imported
+      </p>
+
+      @if (result()) {
+      <div class="result-details">
+        <h3>Import Details</h3>
+        <pre>{{ result() | json }}</pre>
+      </div>
+      }
+
+      <div class="buttons">
+        <p-button label="Start Over" severity="secondary" [outlined]="true" (onClick)="startOver()" />
+        <p-button label="View Dashboard" icon="pi pi-chart-line" />
+      </div>
+    </div>
   </p-card>
   }
 </div>

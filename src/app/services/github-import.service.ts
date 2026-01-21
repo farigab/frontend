@@ -3,6 +3,20 @@ import { Injectable, inject } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
 
+export interface ImportDataRequest {
+  repositories: string[];
+  startDate: string;
+  endDate: string;
+}
+
+export interface ImportDataResponse {
+  pullRequests?: number;
+  issues?: number;
+  commits?: number;
+  repositories?: number;
+  message?: string;
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -10,19 +24,19 @@ export class GithubImportService {
   private readonly http = inject(HttpClient);
   private readonly apiUrl = `${environment.apiUrl}/github`;
 
-  importPullRequests(repository: string, token?: string): Observable<any> {
+  importPullRequests(repository: string, token?: string): Observable<unknown> {
     let params = new HttpParams().set('repository', repository);
     if (token) params = params.set('token', token);
     return this.http.post(`${this.apiUrl}/import/pull-requests`, null, { params });
   }
 
-  importIssues(repository: string, token?: string): Observable<any> {
+  importIssues(repository: string, token?: string): Observable<unknown> {
     let params = new HttpParams().set('repository', repository);
     if (token) params = params.set('token', token);
     return this.http.post(`${this.apiUrl}/import/issues`, null, { params });
   }
 
-  importCommits(repository: string | undefined, minChanges: number = 1, token?: string): Observable<any> {
+  importCommits(repository: string | undefined, minChanges: number = 1, token?: string): Observable<unknown> {
     let params = new HttpParams().set('minChanges', String(minChanges));
     if (repository) params = params.set('repository', repository);
     if (token) params = params.set('token', token);
@@ -35,12 +49,15 @@ export class GithubImportService {
     return this.http.post<string[]>(`${this.apiUrl}/import/repositories`, null, { params });
   }
 
-  saveToken(token: string): Observable<any> {
+  importData(request: ImportDataRequest): Observable<ImportDataResponse> {
+    return this.http.post<ImportDataResponse>(`${this.apiUrl}/import`, request);
+  }
+
+  saveToken(token: string): Observable<unknown> {
     return this.http.post(`${this.apiUrl}/token`, { token });
   }
 
-  clearToken(): Observable<any> {
+  clearToken(): Observable<unknown> {
     return this.http.delete(`${this.apiUrl}/token`);
   }
-
 }

@@ -1,343 +1,453 @@
-/* Container principal */
 .import-container {
-  max-width: 1200px;
+  max-width: 900px;
   margin: 0 auto;
-  padding: 2rem;
+  padding: var(--spacing-2xl) var(--spacing-md);
 }
 
-/* Cards */
-:host ::ng-deep p-card {
-  background: #1e293b;
-  border-radius: 12px;
-  border: 1px solid #334155;
-  box-shadow: none;
-}
-
-:host ::ng-deep p-card .p-card-body {
-  padding: 2rem;
-}
-
-:host ::ng-deep p-card .p-card-content {
-  padding: 0;
-}
-
-/* Header com steps */
 .import-header {
   display: flex;
   align-items: center;
-  gap: 1rem;
-  margin-bottom: 2rem;
+  margin-bottom: var(--spacing-2xl);
+}
+
+.steps {
+  display: flex;
+  gap: var(--spacing-md);
+}
+
+.step {
+  width: 3rem;
+  height: 3rem;
+  border-radius: var(--radius-full);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: var(--font-weight-bold);
+  font-size: 1.125rem;
+  background: rgba(255, 255, 255, 0.6);
+  color: var(--apple-gray-400);
+  border: 2px solid var(--apple-gray-200);
+  transition: all var(--transition-base);
+  box-shadow: var(--shadow-xs);
+}
+
+.step.active {
+  background: linear-gradient(135deg, var(--apple-blue) 0%, #0068E5 100%);
+  color: white;
+  border-color: transparent;
+  box-shadow: var(--shadow-md);
+  transform: scale(1.05);
+}
+
+.step.completed {
+  background: linear-gradient(135deg, var(--apple-green) 0%, #2DA84C 100%);
+  color: white;
+  border-color: transparent;
+  box-shadow: var(--shadow-sm);
 }
 
 .spacer {
   flex: 1;
 }
 
-.steps {
-  display: flex;
-  gap: 0.75rem;
-  align-items: center;
-}
-
-.step {
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
-  background: #0ea5e9;
-  color: #ffffff;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: 600;
-  font-size: 0.875rem;
-}
-
-.step:not(:first-child) {
-  background: #334155;
-}
-
-/* Títulos */
 .section-title {
-  text-align: center;
-  margin: 0 0 0.5rem 0;
-  font-size: 1.5rem;
-  color: #f8fafc;
-  font-weight: 600;
+  font-size: clamp(1.75rem, 4vw, 2.25rem);
+  font-weight: var(--font-weight-extrabold);
+  margin: 0 0 var(--spacing-sm) 0;
+  color: var(--apple-gray-900);
+  letter-spacing: -0.02em;
+  line-height: 1.2;
 }
 
 .subtitle {
-  text-align: center;
-  color: #94a3b8;
-  margin-bottom: 2rem;
-  font-size: 0.875rem;
+  color: var(--apple-gray-500);
+  margin: 0 0 var(--spacing-xl) 0;
+  font-size: 1rem;
+  line-height: 1.6;
 }
 
-/* Formulário */
 .form-row {
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
-  margin-bottom: 1.5rem;
+  gap: var(--spacing-sm);
+  margin-bottom: var(--spacing-xl);
 }
 
 .form-row label {
-  font-weight: 500;
-  color: #f8fafc;
-  font-size: 0.875rem;
+  font-weight: var(--font-weight-semibold);
+  color: var(--apple-gray-800);
+  font-size: 0.9375rem;
 }
 
-:host ::ng-deep .form-row input.p-inputtext {
-  background: #0f172a;
-  border: 1px solid #334155;
-  color: #f8fafc;
-  padding: 0.75rem;
-  border-radius: 8px;
-  font-size: 0.875rem;
+.form-row input[type="text"] {
+  padding: 0.875rem 1rem;
+  border-radius: var(--radius-md);
+  border: 2px solid var(--apple-gray-200);
+  background: white;
+  font-size: 1rem;
+  font-family: var(--font-family);
+  transition: all var(--transition-fast);
+  box-shadow: var(--shadow-xs);
 }
 
-:host ::ng-deep .form-row input.p-inputtext:focus {
-  border-color: #0ea5e9;
-  box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.1);
+.form-row input[type="text"]:focus {
+  outline: none;
+  border-color: var(--apple-blue);
+  box-shadow: 0 0 0 4px rgba(0, 122, 255, 0.1);
 }
 
-:host ::ng-deep .form-row input.p-inputtext::placeholder {
-  color: #64748b;
+.form-row input[type="text"]::placeholder {
+  color: var(--apple-gray-400);
 }
 
 .help-text {
-  color: #94a3b8;
-  font-size: 0.75rem;
+  color: var(--apple-gray-500);
+  font-size: 0.875rem;
+  line-height: 1.5;
 }
 
 .help-text a {
-  color: #0ea5e9;
+  color: var(--apple-blue);
   text-decoration: none;
+  font-weight: var(--font-weight-medium);
+  transition: color var(--transition-fast);
 }
 
 .help-text a:hover {
+  color: var(--apple-blue-hover);
   text-decoration: underline;
 }
 
-/* Botões */
+.help-text a:focus-visible {
+  outline: 2px solid var(--apple-blue);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
 .buttons {
   display: flex;
-  gap: 0.75rem;
-  flex-wrap: wrap;
-  margin-top: 1.5rem;
-  justify-content: center;
+  gap: var(--spacing-md);
+  justify-content: flex-end;
+  margin-top: var(--spacing-2xl);
 }
 
-:host ::ng-deep .buttons button.p-button-secondary {
-  background: #0ea5e9;
-  border: none;
-  color: #ffffff;
-  padding: 0.625rem 1.5rem;
-  border-radius: 8px;
-  font-weight: 500;
-  font-size: 0.875rem;
-}
-
-:host ::ng-deep .buttons button.p-button-secondary:hover {
-  background: #0284c7;
-}
-
-/* Header do card de repositórios */
 .card-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 1rem;
+  margin-bottom: var(--spacing-lg);
+  flex-wrap: wrap;
+  gap: var(--spacing-md);
 }
 
 .card-header h3 {
   margin: 0;
   font-size: 1.25rem;
-  color: #f8fafc;
-  font-weight: 600;
+  font-weight: var(--font-weight-bold);
+  color: var(--apple-gray-900);
 }
 
-/* Ações de repositórios */
 .repo-actions {
   display: flex;
-  gap: 1rem;
+  gap: var(--spacing-lg);
 }
 
 .link-button {
   background: none;
   border: none;
-  color: #0ea5e9;
+  color: var(--apple-blue);
   cursor: pointer;
-  padding: 0;
-  font-size: 0.875rem;
+  font-size: 0.9375rem;
+  font-weight: var(--font-weight-medium);
+  padding: var(--spacing-sm) var(--spacing-md);
   text-decoration: none;
-  font-family: inherit;
-  font-weight: 500;
+  transition: all var(--transition-fast);
+  border-radius: var(--radius-sm);
+  font-family: var(--font-family);
 }
 
 .link-button:hover {
-  text-decoration: underline;
+  background: rgba(0, 122, 255, 0.1);
+  color: var(--apple-blue-hover);
+}
+
+.link-button:active {
+  transform: scale(0.98);
 }
 
 .link-button:focus-visible {
-  outline: 2px solid #0ea5e9;
+  outline: 2px solid var(--apple-blue);
   outline-offset: 2px;
-  border-radius: 2px;
 }
 
-/* Grid de repositórios */
 .repo-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 0.75rem;
-  margin-top: 1rem;
+  gap: var(--spacing-md);
+  margin: var(--spacing-xl) 0;
+  max-height: 440px;
+  overflow-y: auto;
+  padding: var(--spacing-md);
+  border: 2px solid var(--apple-gray-200);
+  border-radius: var(--radius-md);
+  background: rgba(249, 250, 251, 0.5);
+}
+
+.repo-grid::-webkit-scrollbar {
+  width: 10px;
+}
+
+.repo-grid::-webkit-scrollbar-track {
+  background: var(--apple-gray-100);
+  border-radius: var(--radius-md);
+}
+
+.repo-grid::-webkit-scrollbar-thumb {
+  background: var(--apple-gray-300);
+  border-radius: var(--radius-full);
+  border: 2px solid var(--apple-gray-100);
+}
+
+.repo-grid::-webkit-scrollbar-thumb:hover {
+  background: var(--apple-gray-400);
 }
 
 .repo-card {
-  display: flex;
-  gap: 0.75rem;
-  align-items: center;
-  padding: 1rem;
-  border-radius: 8px;
-  border: 1px solid #334155;
-  background: #0f172a;
-  transition: border-color 0.15s ease, background 0.15s ease;
+  padding: var(--spacing-md);
+  border: 2px solid var(--apple-gray-200);
+  border-radius: var(--radius-md);
+  background: white;
+  transition: all var(--transition-fast);
+  cursor: pointer;
 }
 
 .repo-card:hover {
-  border-color: #475569;
-  background: #1e293b;
+  background: rgba(0, 122, 255, 0.03);
+  border-color: var(--apple-blue);
+  box-shadow: var(--shadow-sm);
+  transform: translateY(-2px);
 }
 
-/* Checkbox do repositório */
+.repo-card:has(input:checked) {
+  background: rgba(0, 122, 255, 0.08);
+  border-color: var(--apple-blue);
+  box-shadow: 0 0 0 4px rgba(0, 122, 255, 0.1);
+}
+
 .repo-checkbox {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
+  gap: var(--spacing-md);
   cursor: pointer;
   width: 100%;
 }
 
 .repo-checkbox input[type="checkbox"] {
-  width: 18px;
-  height: 18px;
   cursor: pointer;
-  flex-shrink: 0;
-  accent-color: #0ea5e9;
+  width: 1.25rem;
+  height: 1.25rem;
+  border-radius: var(--radius-sm);
+  border: 2px solid var(--apple-gray-300);
+  transition: all var(--transition-fast);
+  accent-color: var(--apple-blue);
+}
+
+.repo-checkbox input[type="checkbox"]:hover {
+  border-color: var(--apple-blue);
 }
 
 .repo-checkbox input[type="checkbox"]:focus-visible {
-  outline: 2px solid #0ea5e9;
+  outline: 2px solid var(--apple-blue);
   outline-offset: 2px;
 }
 
 .repo-name {
-  font-weight: 500;
-  color: #f8fafc;
+  font-size: 0.9375rem;
+  font-weight: var(--font-weight-medium);
+  color: var(--apple-gray-800);
   word-break: break-word;
-  font-size: 0.875rem;
+  line-height: 1.4;
 }
 
-/* Footer */
 .repo-footer {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-top: 2rem;
-  gap: 1rem;
+  margin-top: var(--spacing-2xl);
+  padding-top: var(--spacing-xl);
+  border-top: 2px solid var(--apple-gray-200);
+  gap: var(--spacing-lg);
   flex-wrap: wrap;
-}
-
-:host ::ng-deep .repo-footer .p-button-outlined {
-  background: transparent;
-  border: 1px solid #334155;
-  color: #f8fafc;
-  padding: 0.625rem 1.5rem;
-  border-radius: 8px;
-  font-weight: 500;
-  font-size: 0.875rem;
-}
-
-:host ::ng-deep .repo-footer .p-button-outlined:hover {
-  background: #1e293b;
-  border-color: #475569;
 }
 
 .footer-actions {
   display: flex;
   align-items: center;
-  gap: 1rem;
+  gap: var(--spacing-lg);
 }
 
 .timer {
-  color: #94a3b8;
   font-size: 0.875rem;
+  color: var(--apple-gray-500);
+  font-style: italic;
+  font-weight: var(--font-weight-medium);
+  padding: var(--spacing-sm) var(--spacing-md);
+  background: rgba(107, 114, 128, 0.1);
+  border-radius: var(--radius-md);
 }
 
-/* Botão Continue customizado */
-:host ::ng-deep .footer-actions button[pButton]:not(.p-button-outlined) {
-  background: #0ea5e9;
-  color: #fff;
-  border: none;
-  padding: 0.625rem 1.5rem;
-  border-radius: 8px;
-  font-weight: 500;
-  font-size: 0.875rem;
-  transition: background 0.15s ease;
+.date-range-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--spacing-xl);
+  margin: var(--spacing-xl) 0 var(--spacing-2xl) 0;
 }
 
-:host ::ng-deep .footer-actions button[pButton]:not(.p-button-outlined):hover {
-  background: #0284c7;
+.summary-section {
+  margin: var(--spacing-2xl) 0;
+  padding: var(--spacing-xl);
+  background: linear-gradient(135deg, rgba(0, 122, 255, 0.03) 0%, rgba(0, 122, 255, 0.06) 100%);
+  border-radius: var(--radius-lg);
+  border: 2px solid rgba(0, 122, 255, 0.15);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
 }
 
-:host ::ng-deep .footer-actions button[pButton]:not(.p-button-outlined):active {
-  background: #0369a1;
-}
-
-/* Loading overlay */
-.overlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(15, 23, 42, 0.8);
-  backdrop-filter: blur(4px);
+.summary-section h3 {
+  margin: 0 0 var(--spacing-lg) 0;
+  font-size: 1.125rem;
+  font-weight: var(--font-weight-bold);
+  color: var(--apple-gray-900);
   display: flex;
   align-items: center;
-  justify-content: center;
-  z-index: 1000;
+  gap: var(--spacing-sm);
 }
 
-.spinner {
-  width: 56px;
-  height: 56px;
-  border-radius: 50%;
-  border: 4px solid rgba(14, 165, 233, 0.2);
-  border-top-color: #0ea5e9;
-  animation: spin 0.8s linear infinite;
+.summary-section h3::before {
+  content: '📋';
+  font-size: 1.25rem;
 }
 
-@keyframes spin {
-  to {
-    transform: rotate(360deg);
+.summary-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.summary-list li {
+  padding: var(--spacing-md) 0;
+  color: var(--apple-gray-700);
+  font-size: 0.9375rem;
+  line-height: 1.6;
+  border-bottom: 1px solid rgba(0, 122, 255, 0.1);
+}
+
+.summary-list li:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.summary-list strong {
+  color: var(--apple-gray-900);
+  margin-right: var(--spacing-sm);
+  font-weight: var(--font-weight-semibold);
+}
+
+.success-container {
+  text-align: center;
+  padding: var(--spacing-3xl) var(--spacing-md);
+  animation: fadeIn var(--transition-slow) ease-out;
+}
+
+.success-icon {
+  font-size: 5rem;
+  color: var(--apple-green);
+  margin-bottom: var(--spacing-xl);
+  animation: scaleIn var(--transition-slow) cubic-bezier(0.34, 1.56, 0.64, 1);
+  display: inline-block;
+}
+
+@keyframes scaleIn {
+  0% {
+    transform: scale(0);
+    opacity: 0;
+  }
+
+  50% {
+    transform: scale(1.1);
+  }
+
+  100% {
+    transform: scale(1);
+    opacity: 1;
   }
 }
 
-/* Responsividade */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.result-details {
+  margin: var(--spacing-2xl) auto;
+  padding: var(--spacing-xl);
+  background: rgba(249, 250, 251, 0.8);
+  border-radius: var(--radius-lg);
+  border: 2px solid var(--apple-gray-200);
+  text-align: left;
+  max-width: 600px;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+.result-details h3 {
+  margin: 0 0 var(--spacing-lg) 0;
+  font-size: 1.125rem;
+  font-weight: var(--font-weight-bold);
+  color: var(--apple-gray-900);
+}
+
+.result-details pre {
+  margin: 0;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Code', 'Courier New', monospace;
+  font-size: 0.875rem;
+  color: var(--apple-gray-700);
+  background: white;
+  padding: var(--spacing-lg);
+  border-radius: var(--radius-md);
+  overflow-x: auto;
+  border: 1px solid var(--apple-gray-200);
+  box-shadow: var(--shadow-xs);
+  line-height: 1.6;
+}
+
+/* Responsive Design */
 @media (max-width: 768px) {
   .import-container {
-    padding: 1rem;
+    padding: var(--spacing-xl) var(--spacing-md);
   }
 
-  :host ::ng-deep p-card .p-card-body {
-    padding: 1.5rem;
-  }
-
-  .repo-grid {
+  .date-range-container {
     grid-template-columns: 1fr;
   }
 
   .card-header {
     flex-direction: column;
     align-items: flex-start;
-    gap: 0.75rem;
+  }
+
+  .repo-actions {
+    width: 100%;
+    justify-content: space-between;
   }
 
   .repo-footer {
@@ -350,23 +460,62 @@
     width: 100%;
   }
 
-  :host ::ng-deep .footer-actions button[pButton] {
+  .footer-actions button {
     width: 100%;
   }
 
-  :host ::ng-deep .repo-footer .p-button-outlined {
+  .buttons {
+    flex-direction: column;
+  }
+
+  .buttons button {
     width: 100%;
+  }
+
+  .repo-grid {
+    grid-template-columns: 1fr;
+    max-height: 360px;
+  }
+
+  .step {
+    width: 2.5rem;
+    height: 2.5rem;
+    font-size: 1rem;
+  }
+
+  .steps {
+    gap: var(--spacing-sm);
   }
 }
 
-/* Acessibilidade - Prefers Reduced Motion */
-@media (prefers-reduced-motion: reduce) {
+/* PrimeNG DatePicker Customization */
+::ng-deep .p-datepicker {
+  border-radius: var(--radius-md) !important;
+  border: 2px solid var(--apple-gray-200) !important;
+  box-shadow: var(--shadow-lg) !important;
+}
 
-  *,
-  *::before,
-  *::after {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
+::ng-deep .p-datepicker input {
+  padding: 0.875rem 1rem !important;
+  border-radius: var(--radius-md) !important;
+  border: 2px solid var(--apple-gray-200) !important;
+  font-size: 1rem !important;
+  font-family: var(--font-family) !important;
+  transition: all var(--transition-fast) !important;
+}
+
+::ng-deep .p-datepicker input:focus {
+  border-color: var(--apple-blue) !important;
+  box-shadow: 0 0 0 4px rgba(0, 122, 255, 0.1) !important;
+}
+
+/* Loading Animation */
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
   }
+}
+
+::ng-deep .p-button-loading-icon {
+  animation: spin 1s linear infinite;
 }

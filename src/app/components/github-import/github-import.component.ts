@@ -1,9 +1,12 @@
-import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, inject, OnInit, signal } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { JsonPipe } from '@angular/common';
 import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
 import { InputTextModule } from 'primeng/inputtext';
+import { DatePickerModule } from 'primeng/datepicker';
 import { ToastModule } from 'primeng/toast';
+import { MessageService } from 'primeng/api';
 import { GithubImportService } from '../../services/github-import.service';
 
 interface LoadingState {
@@ -11,19 +14,25 @@ interface LoadingState {
   issues: boolean;
   commits: boolean;
   repos: boolean;
+  import: boolean;
 }
 
 type LoadingKey = keyof LoadingState;
 
+type ImportStep = 'token' | 'repositories' | 'dateRange' | 'complete';
+
 @Component({
   selector: 'app-github-import',
   imports: [
-    CommonModule,
+    FormsModule,
+    JsonPipe,
     ButtonModule,
     CardModule,
     InputTextModule,
+    DatePickerModule,
     ToastModule
   ],
+  providers: [MessageService],
   templateUrl: './github-import.component.html',
   styleUrls: ['./github-import.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -31,22 +40,29 @@ type LoadingKey = keyof LoadingState;
 })
 export class GithubImportComponent implements OnInit {
   private readonly service = inject(GithubImportService);
+  private readonly messageService = inject(MessageService);
 
+  readonly currentStep = signal<ImportStep>('token');
   readonly token = signal('');
   readonly result = signal<unknown>(null);
   readonly loading = signal<LoadingState>({
     prs: false,
     issues: false,
     commits: false,
-    repos: false
+    repos: false,
+    import: false
   });
 
   readonly repositories = signal<string[]>([]);
   readonly selectedRepos = signal(new Set<string>());
+  readonly startDate = signal<Date | null>(null);
+  readonly endDate = signal<Date | null>(null);
+  readonly maxDate = new Date();
 
-  // Computed para facilitar verificações
   readonly hasRepositories = computed(() => this.repositories().length > 0);
   readonly selectedCount = computed(() => this.selectedRepos().size);
+  readonly hasDateRange = computed(() => this.startDate() !== null && this.endDate() !== null);
+  readonly isImporting = computed(() => this.loading().import);
 
   ngOnInit(): void {
     this.checkForSavedToken();
@@ -55,7 +71,7 @@ export class GithubImportComponent implements OnInit {
   saveToken(): void {
     const token = this.token();
     if (!token) {
-      this.result.set({ error: 'Token is empty' });
+      this.showError('Token is required');
       return;
     }
 
@@ -90,36 +106,77 @@ export class GithubImportComponent implements OnInit {
     });
   }
 
-  continueWithSelection(): void {
-    const selected = Array.from(this.selectedRepos());
-    // Se nenhum selecionado, usa todos
-    const payload = selected.length > 0 ? selected : this.repositories();
-    this.result.set({ selected: payload });
+  continueToDateRange(): void {
+    this.currentStep.set('dateRange');
+  }
+
+  backToRepositories(): void {
+    this.currentStep.set('repositories');
   }
 
   clearToken(): void {
     this.setLoading('repos', true);
     this.service.clearToken().subscribe({
       next: () => {
-        this.token.set('');
-        this.repositories.set([]);
-        this.selectedRepos.set(new Set());
+        this.resetState();
         this.setLoading('repos', false);
       },
       error: (err: unknown) => {
-        this.token.set('');
-        this.repositories.set([]);
-        this.selectedRepos.set(new Set());
+        this.resetState();
         this.handleError('repos', err);
       }
     });
+  }
+
+  startImport(): void {
+    const start = this.startDate();
+    const end = this.endDate();
+
+    if (!start || !end) {
+      this.showError('Please select both start and end dates');
+      return;
+    }
+
+    if (start > end) {
+      this.showError('Start date must be before end date');
+      return;
+    }
+
+    const selectedRepos = Array.from(this.selectedRepos());
+    const repos = selectedRepos.length > 0 ? selectedRepos : this.repositories();
+
+    this.setLoading('import', true);
+
+    this.service.importData({
+      repositories: repos,
+      startDate: start.toISOString(),
+      endDate: end.toISOString()
+    }).subscribe({
+      next: (response: unknown) => {
+        this.result.set(response);
+        this.currentStep.set('complete');
+        this.setLoading('import', false);
+        this.showSuccess('Import completed successfully');
+      },
+      error: (err: unknown) => {
+        this.handleError('import', err);
+      }
+    });
+  }
+
+  startOver(): void {
+    this.resetState();
+    this.currentStep.set('token');
   }
 
   private checkForSavedToken(): void {
     this.setLoading('repos', true);
     this.service.importRepositories().subscribe({
       next: (repos: string[] | null) => {
-        this.repositories.set(repos ?? []);
+        if (repos && repos.length > 0) {
+          this.repositories.set(repos);
+          this.currentStep.set('repositories');
+        }
         this.setLoading('repos', false);
       },
       error: () => {
@@ -133,6 +190,7 @@ export class GithubImportComponent implements OnInit {
     this.service.importRepositories(this.token()).subscribe({
       next: (repos: string[] | null) => {
         this.repositories.set(repos ?? []);
+        this.currentStep.set('repositories');
         this.setLoading('repos', false);
       },
       error: (err: unknown) => {
@@ -141,13 +199,40 @@ export class GithubImportComponent implements OnInit {
     });
   }
 
+  private resetState(): void {
+    this.token.set('');
+    this.repositories.set([]);
+    this.selectedRepos.set(new Set());
+    this.startDate.set(null);
+    this.endDate.set(null);
+    this.result.set(null);
+  }
+
   private setLoading(key: LoadingKey, value: boolean): void {
     this.loading.update(state => ({ ...state, [key]: value }));
   }
 
   private handleError(key: LoadingKey, error: unknown): void {
-    const message = error instanceof Error ? error.message : 'Unknown error';
-    this.result.set({ error: message });
+    const message = error instanceof Error ? error.message : 'An unexpected error occurred';
+    this.showError(message);
     this.setLoading(key, false);
+  }
+
+  private showError(message: string): void {
+    this.messageService.add({
+      severity: 'error',
+      summary: 'Error',
+      detail: message,
+      life: 5000
+    });
+  }
+
+  private showSuccess(message: string): void {
+    this.messageService.add({
+      severity: 'success',
+      summary: 'Success',
+      detail: message,
+      life: 5000
+    });
   }
 }
