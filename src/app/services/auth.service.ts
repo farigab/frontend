@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { inject, Injectable, signal } from '@angular/core';
 import { environment } from '../../environments/environment';
 import { tap, map, catchError, of } from 'rxjs';
+import { Router } from '@angular/router';
 
 export interface AuthUser {
   readonly id: number;
@@ -15,6 +16,7 @@ export interface AuthUser {
 export class AuthService {
 
   readonly user = signal<AuthUser | null>(null);
+  readonly router = inject(Router);
 
   private http = inject(HttpClient);
 
@@ -24,29 +26,20 @@ export class AuthService {
   }
 
   logout(): void {
-    this.http.post(`${environment.apiUrl}/auth/logout`, {})
-      .subscribe(() => this.user.set(null));
-  }
-
-  loadUser(): void {
-    this.http.get<AuthUser>(`${environment.apiUrl}/user`)
-      .subscribe(user => {
-        this.user.set(user);
+    this.http
+      .post(`${environment.apiUrl}/auth/logout`, {})
+      .subscribe(() => {
+        this.user.set(null);
+        this.router.navigate(['/login']);
       });
   }
 
-  checkSession() {
-    if (this.user()) {
-      return of(true);
-    }
 
+  loadUser() {
     return this.http
       .get<AuthUser>(`${environment.apiUrl}/user`, { withCredentials: true })
       .pipe(
-        tap(user => this.user.set(user)),
-        map(() => true),
-        catchError(() => of(false))
+        tap(user => this.user.set(user))
       );
   }
-
 }

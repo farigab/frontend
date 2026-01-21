@@ -1,14 +1,14 @@
 import { inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from '../services/auth.service';
-import { catchError, map } from 'rxjs';
+import { catchError, map, of } from 'rxjs';
 
 export const authGuard = () => {
   const auth = inject(AuthService);
   const router = inject(Router);
 
-  return auth.checkSession().pipe(
+  return auth.loadUser().pipe(
     map(() => true),
-    catchError(async () => router.createUrlTree(['/login']))
+    catchError(() => of(router.createUrlTree(['/login'])))
   );
 };
