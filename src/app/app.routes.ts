@@ -15,14 +15,6 @@ export const routes: Routes = [
     loadComponent: () => import('./components/achievement-list/achievement-list.component').then(m => m.AchievementListComponent)
   },
   {
-    path: 'achievements/new',
-    loadComponent: () => import('./components/achievement-form/achievement-form.component').then(m => m.AchievementFormComponent)
-  },
-  {
-    path: 'achievements/edit/:id',
-    loadComponent: () => import('./components/achievement-form/achievement-form.component').then(m => m.AchievementFormComponent)
-  },
-  {
     path: 'timeline',
     loadComponent: () => import('./components/timeline/timeline.component').then(m => m.TimelineComponent)
   },

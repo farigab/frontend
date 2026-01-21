@@ -11,19 +11,19 @@ import { DrawerModule } from 'primeng/drawer';
 import { AuthService } from '../../services/auth.service';
 
 @Component({
-    selector: 'app-layout',
-    imports: [
-        CommonModule,
-        RouterModule,
-        ButtonModule,
-        AvatarModule,
-        DrawerModule,
-        RippleModule
-    ],
-    templateUrl: './layout.component.html',
-    styleUrls: ['./layout.component.css'],
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    host: { class: 'layout-wrapper' }
+  selector: 'app-layout',
+  imports: [
+    CommonModule,
+    RouterModule,
+    ButtonModule,
+    AvatarModule,
+    DrawerModule,
+    RippleModule
+  ],
+  templateUrl: './layout.component.html',
+  styleUrls: ['./layout.component.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  host: { class: 'layout-wrapper' }
 })
 export class LayoutComponent {
 
@@ -35,14 +35,7 @@ export class LayoutComponent {
 
   protected readonly menuItems: readonly MenuItem[] = [
     { label: 'Dashboard', icon: 'pi pi-home', routerLink: '/dashboard' },
-    {
-      label: 'Achievements',
-      icon: 'pi pi-star',
-      items: [
-        { label: 'View All', icon: 'pi pi-list', routerLink: '/achievements' },
-        { label: 'Add New', icon: 'pi pi-plus', routerLink: '/achievements/new' }
-      ]
-    },
+    { label: 'Achievements', icon: 'pi pi-star', routerLink: '/achievements' },
     { label: 'Timeline', icon: 'pi pi-clock', routerLink: '/timeline' },
     { label: 'Reports', icon: 'pi pi-chart-bar', routerLink: '/reports' },
     { label: 'GitHub Import', icon: 'pi pi-upload', routerLink: '/github-import' }
