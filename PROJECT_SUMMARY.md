@@ -162,7 +162,6 @@ private readonly service = inject(AchievementService);
 - Reactive forms with validation
 - Date picker integration
 - Category dropdown with icons
-- Impact level selection
 - Edit mode detection
 - Success/error feedback
 

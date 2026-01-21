@@ -4,7 +4,6 @@ export interface Achievement {
   description: string;
   date: string;
   category: string;
-  impact: string;
 }
 
 export interface AchievementFormData {
@@ -12,7 +11,6 @@ export interface AchievementFormData {
   description: string;
   date: Date;
   category: string;
-  impact: string;
 }
 
 export interface AchievementCategory {

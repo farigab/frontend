@@ -30,7 +30,6 @@
           <th class="col-description">Descrição</th>
           <th class="col-date">Data</th>
           <th class="col-category">Categoria</th>
-          <th class="col-impact">Impacto</th>
           <th class="col-actions">Ações</th>
         </tr>
       </ng-template>
@@ -51,9 +50,6 @@
           <td class="col-category">
             <p-tag [value]="achievement.category" [severity]="getCategorySeverity(achievement.category)"
               styleClass="category-tag"></p-tag>
-          </td>
-          <td class="col-impact">
-            <span class="impact-badge">{{ achievement.impact }}</span>
           </td>
           <td class="col-actions">
             <div class="action-buttons">

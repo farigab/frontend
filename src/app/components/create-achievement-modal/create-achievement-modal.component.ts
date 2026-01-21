@@ -43,13 +43,6 @@ export class CreateAchievementModalComponent {
 
   protected readonly categoriesArray = Array.from(ACHIEVEMENT_CATEGORIES);
 
-  protected readonly impactLevels = [
-    { label: 'Baixo', value: 'Baixo' },
-    { label: 'Médio', value: 'Médio' },
-    { label: 'Alto', value: 'Alto' },
-    { label: 'Muito Alto', value: 'Muito Alto' }
-  ];
-
   // Outputs
   protected readonly onClose = output<void>();
   protected readonly onSave = output<Achievement>();
@@ -59,8 +52,7 @@ export class CreateAchievementModalComponent {
       title: ['', [Validators.required, Validators.minLength(3)]],
       description: ['', [Validators.required, Validators.minLength(10)]],
       date: [new Date(), Validators.required],
-      category: ['', Validators.required],
-      impact: ['', Validators.required]
+      category: ['', Validators.required]
     });
 
     effect(() => {
@@ -72,7 +64,6 @@ export class CreateAchievementModalComponent {
             description: editAchievement.description,
             date: new Date(editAchievement.date),
             category: editAchievement.category,
-            impact: editAchievement.impact
           });
         } else {
           this.form.reset({
@@ -80,7 +71,6 @@ export class CreateAchievementModalComponent {
             description: '',
             date: new Date(),
             category: '',
-            impact: ''
           });
         }
       }

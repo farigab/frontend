@@ -159,7 +159,6 @@ export const environment = {
 - Reactive form validation
 - Date picker
 - Category dropdown
-- Impact level selection
 
 ### Layout
 
