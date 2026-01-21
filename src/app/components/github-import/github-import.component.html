@@ -18,10 +18,11 @@
       <label for="token-input">Personal Access Token</label>
       <input pInputText id="token-input" type="text" [value]="token()" (input)="token.set($any($event.target).value)"
         placeholder="ghp_xxxxxxxxxxxxxxxxxxxx" aria-describedby="token-help" />
-        <small id="token-help" class="help-text">
-          Create a token at <a href="https://github.com/settings/tokens/new?scopes=repo,read:user&description=farigab-bragdoc"
-            target="_blank" rel="noopener noreferrer">GitHub Settings</a> with repo scope
-        </small>
+      <small id="token-help" class="help-text">
+        Create a token at <a
+          href="https://github.com/settings/tokens/new?scopes=repo,read:user&description=farigab-bragdoc"
+          target="_blank" rel="noopener noreferrer">GitHub Settings</a> with repo scope
+      </small>
     </div>
 
     <div class="buttons">
@@ -62,7 +63,7 @@
     </div>
 
     <div class="repo-footer">
-      <button pButton label="Back" class="p-button-outlined"></button>
+      <button pButton label="Back" class="p-button-outlined" (click)="clearToken()"></button>
       <div class="footer-actions">
         <div class="timer" aria-live="polite">~30 seconds to generate</div>
         <button pButton label="Continue" (click)="continueWithSelection()"></button>

@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, inject, OnInit, signal, computed } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, OnInit, signal } from '@angular/core';
 import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
 import { InputTextModule } from 'primeng/inputtext';
@@ -95,6 +95,24 @@ export class GithubImportComponent implements OnInit {
     // Se nenhum selecionado, usa todos
     const payload = selected.length > 0 ? selected : this.repositories();
     this.result.set({ selected: payload });
+  }
+
+  clearToken(): void {
+    this.setLoading('repos', true);
+    this.service.clearToken().subscribe({
+      next: () => {
+        this.token.set('');
+        this.repositories.set([]);
+        this.selectedRepos.set(new Set());
+        this.setLoading('repos', false);
+      },
+      error: (err: unknown) => {
+        this.token.set('');
+        this.repositories.set([]);
+        this.selectedRepos.set(new Set());
+        this.handleError('repos', err);
+      }
+    });
   }
 
   private checkForSavedToken(): void {

@@ -39,4 +39,8 @@ export class GithubImportService {
     return this.http.post(`${this.apiUrl}/token`, { token });
   }
 
+  clearToken(): Observable<any> {
+    return this.http.delete(`${this.apiUrl}/token`);
+  }
+
 }
