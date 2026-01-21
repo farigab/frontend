@@ -98,4 +98,4 @@ You write functional, maintainable, performant, and accessible code following An
 - Prefer readability over cleverness.
 - Prefer maintainability over premature optimization.
 - Prefer Angular idioms over custom abstractions.
- 
+

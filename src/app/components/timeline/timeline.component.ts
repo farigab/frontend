@@ -4,17 +4,21 @@ import { CardModule } from 'primeng/card';
 import { TagModule } from 'primeng/tag';
 import { TimelineModule } from 'primeng/timeline';
 import { TimelineReport } from '../../models/report.model';
+import { LoggingService } from '../../services/logging.service';
+import { NotificationService } from '../../services/notification.service';
 import { ReportService } from '../../services/report.service';
 
 @Component({
-    selector: 'app-timeline',
-    imports: [DatePipe, CardModule, TimelineModule, TagModule],
-    templateUrl: './timeline.component.html',
-    styleUrls: ['./timeline.component.css'],
-    changeDetection: ChangeDetectionStrategy.OnPush
+  selector: 'app-timeline',
+  imports: [DatePipe, CardModule, TimelineModule, TagModule],
+  templateUrl: './timeline.component.html',
+  styleUrls: ['./timeline.component.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TimelineComponent implements OnInit {
   private reportService = inject(ReportService);
+  private logger = inject(LoggingService);
+  private notify = inject(NotificationService);
 
   timelineData = signal<TimelineReport | null>(null);
   loading = signal(true);
@@ -41,7 +45,8 @@ export class TimelineComponent implements OnInit {
         this.loading.set(false);
       },
       error: (error) => {
-        console.error('Error loading timeline:', error);
+        this.logger.error('Error loading timeline', { error });
+        this.notify.error('Erro ao carregar timeline', String((error as any)?.message ?? error));
         this.loading.set(false);
       }
     });

@@ -9,6 +9,8 @@ import { TextareaModule } from 'primeng/textarea';
 import { ToastModule } from 'primeng/toast';
 import { ACHIEVEMENT_CATEGORIES, Achievement } from '../../models/achievement.model';
 import { AchievementService } from '../../services/achievement.service';
+import { LoggingService } from '../../services/logging.service';
+import { NotificationService } from '../../services/notification.service';
 
 @Component({
   selector: 'app-create-achievement-modal',
@@ -33,6 +35,8 @@ export class CreateAchievementModalComponent {
   private readonly fb = inject(FormBuilder);
   private readonly achievementService = inject(AchievementService);
   private readonly messageService = inject(MessageService);
+  private readonly logger = inject(LoggingService);
+  private readonly notify = inject(NotificationService);
 
   protected readonly form: FormGroup;
   protected readonly loading = signal(false);
@@ -108,12 +112,8 @@ export class CreateAchievementModalComponent {
           this.close();
         },
         error: (error) => {
-          console.error('Error updating achievement:', error);
-          this.messageService.add({
-            severity: 'error',
-            summary: 'Erro',
-            detail: 'Erro ao atualizar achievement'
-          });
+          this.logger.error('Error updating achievement', { error });
+          this.notify.error('Erro ao atualizar achievement', String((error as any)?.message ?? error));
           this.loading.set(false);
         }
       });
@@ -130,12 +130,8 @@ export class CreateAchievementModalComponent {
           this.close();
         },
         error: (error) => {
-          console.error('Error creating achievement:', error);
-          this.messageService.add({
-            severity: 'error',
-            summary: 'Erro',
-            detail: 'Erro ao criar achievement'
-          });
+          this.logger.error('Error creating achievement', { error });
+          this.notify.error('Erro ao criar achievement', String((error as any)?.message ?? error));
           this.loading.set(false);
         }
       });

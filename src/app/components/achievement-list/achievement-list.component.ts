@@ -12,6 +12,8 @@ import { TagModule } from 'primeng/tag';
 import { ToastModule } from 'primeng/toast';
 import { ACHIEVEMENT_CATEGORIES, Achievement } from '../../models/achievement.model';
 import { AchievementService } from '../../services/achievement.service';
+import { LoggingService } from '../../services/logging.service';
+import { NotificationService } from '../../services/notification.service';
 import { CreateAchievementModalComponent } from '../create-achievement-modal/create-achievement-modal.component';
 
 @Component({
@@ -42,6 +44,8 @@ export class AchievementListComponent implements OnInit {
   private readonly achievementService = inject(AchievementService);
   private readonly confirmationService = inject(ConfirmationService);
   private readonly messageService = inject(MessageService);
+  private readonly logger = inject(LoggingService);
+  private readonly notify = inject(NotificationService);
 
   protected readonly achievements = signal<Achievement[]>([]);
   protected readonly loading = signal(true);
@@ -80,12 +84,8 @@ export class AchievementListComponent implements OnInit {
         this.loading.set(false);
       },
       error: (error) => {
-        console.error('Error loading achievements:', error);
-        this.messageService.add({
-          severity: 'error',
-          summary: 'Error',
-          detail: 'Failed to load achievements'
-        });
+        this.logger.error('Error loading achievements', { error });
+        this.notify.error('Erro ao carregar achievements', String((error as any)?.message ?? error));
         this.loading.set(false);
       }
     });
@@ -117,12 +117,8 @@ export class AchievementListComponent implements OnInit {
             this.loadAchievements();
           },
           error: (error) => {
-            console.error('Error deleting achievement:', error);
-            this.messageService.add({
-              severity: 'error',
-              summary: 'Error',
-              detail: 'Failed to delete achievement'
-            });
+            this.logger.error('Error deleting achievement', { error });
+            this.notify.error('Erro ao excluir achievement', String((error as any)?.message ?? error));
           }
         });
       }

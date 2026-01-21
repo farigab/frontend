@@ -1,8 +1,10 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable, signal } from '@angular/core';
-import { environment } from '../../environments/environment';
-import { tap, map, catchError, of } from 'rxjs';
 import { Router } from '@angular/router';
+import { catchError, map, of, tap } from 'rxjs';
+import { environment } from '../../environments/environment';
+import { LoggingService } from './logging.service';
+import { NotificationService } from './notification.service';
 
 export interface AuthUser {
   readonly id: number;
@@ -17,6 +19,9 @@ export class AuthService {
 
   readonly user = signal<AuthUser | null>(null);
   readonly router = inject(Router);
+
+  private readonly logger = inject(LoggingService);
+  private readonly notify = inject(NotificationService);
 
   private http = inject(HttpClient);
 
@@ -34,7 +39,8 @@ export class AuthService {
           this.router.navigate(['/login']);
         },
         error: (err) => {
-          console.error('Erro no logout:', err);
+          this.logger.error('Erro no logout', { err });
+          this.notify.error('Erro no logout', String((err as any)?.message ?? err));
           this.user.set(null);
           this.router.navigate(['/login']);
         }

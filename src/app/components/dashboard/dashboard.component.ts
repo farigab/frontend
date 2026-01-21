@@ -7,21 +7,25 @@ import { ChartModule } from 'primeng/chart';
 import { SkeletonModule } from 'primeng/skeleton';
 import { TagModule } from 'primeng/tag';
 import { SummaryReport } from '../../models/report.model';
+import { LoggingService } from '../../services/logging.service';
+import { NotificationService } from '../../services/notification.service';
 import { ReportService } from '../../services/report.service';
 import { CreateAchievementModalComponent } from '../create-achievement-modal/create-achievement-modal.component';
 
 @Component({
-    selector: 'app-dashboard',
-    imports: [DatePipe, RouterLink, CardModule, ButtonModule, ChartModule, SkeletonModule, TagModule, CreateAchievementModalComponent],
-    templateUrl: './dashboard.component.html',
-    styleUrls: ['./dashboard.component.css'],
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    host: {
-        'class': 'dashboard-page'
-    }
+  selector: 'app-dashboard',
+  imports: [DatePipe, RouterLink, CardModule, ButtonModule, ChartModule, SkeletonModule, TagModule, CreateAchievementModalComponent],
+  templateUrl: './dashboard.component.html',
+  styleUrls: ['./dashboard.component.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  host: {
+    'class': 'dashboard-page'
+  }
 })
 export class DashboardComponent implements OnInit {
   private readonly reportService = inject(ReportService);
+  private readonly logger = inject(LoggingService);
+  private readonly notify = inject(NotificationService);
 
   protected readonly summary = signal<SummaryReport | null>(null);
   protected readonly categoryChartData = signal<any>(null);
@@ -52,7 +56,8 @@ export class DashboardComponent implements OnInit {
         this.loading.set(false);
       },
       error: (error) => {
-        console.error('Error loading summary:', error);
+        this.logger.error('Error loading summary', { error });
+        this.notify.error('Erro ao carregar resumo', String((error as any)?.message ?? error));
         this.loading.set(false);
       }
     });

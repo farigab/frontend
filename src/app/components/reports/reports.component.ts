@@ -4,22 +4,26 @@ import { FormsModule } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
 import { ChartModule } from 'primeng/chart';
+import { DatePickerModule } from 'primeng/datepicker';
 import { DialogModule } from 'primeng/dialog';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { AIGitHubAnalysis, AISummaryReport, GitHubStats, PeriodReport } from '../../models/report.model';
-import { ReportService } from '../../services/report.service';
-import { DatePickerModule } from 'primeng/datepicker';
 import { MarkdownPipe } from '../../pipes/markdown.pipe';
+import { LoggingService } from '../../services/logging.service';
+import { NotificationService } from '../../services/notification.service';
+import { ReportService } from '../../services/report.service';
 
 @Component({
-    selector: 'app-reports',
+  selector: 'app-reports',
   imports: [DatePipe, FormsModule, CardModule, ButtonModule, DatePickerModule, ChartModule, DialogModule, ProgressSpinnerModule, MarkdownPipe],
-    templateUrl: './reports.component.html',
-    styleUrls: ['./reports.component.css'],
-    changeDetection: ChangeDetectionStrategy.OnPush
+  templateUrl: './reports.component.html',
+  styleUrls: ['./reports.component.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ReportsComponent implements OnInit {
   private reportService = inject(ReportService);
+  private logger = inject(LoggingService);
+  private notify = inject(NotificationService);
 
   private _startDate = signal(new Date(new Date().getFullYear(), 0, 1));
   private _endDate = signal(new Date());
@@ -76,7 +80,8 @@ export class ReportsComponent implements OnInit {
         this.loading.set(false);
       },
       error: (error) => {
-        console.error('Error loading period report:', error);
+        this.logger.error('Error loading period report', { error });
+        this.notify.error('Erro ao gerar relatório', String((error as any)?.message ?? error));
         this.loading.set(false);
       }
     });
@@ -89,7 +94,8 @@ export class ReportsComponent implements OnInit {
         this.setupGitHubChart(data);
       },
       error: (error) => {
-        console.error('Error loading GitHub stats:', error);
+        this.logger.error('Error loading GitHub stats', { error });
+        this.notify.error('Erro ao carregar estatísticas do GitHub', String((error as any)?.message ?? error));
       }
     });
   }
@@ -225,7 +231,8 @@ export class ReportsComponent implements OnInit {
         window.URL.revokeObjectURL(url);
       },
       error: (error) => {
-        console.error('Error exporting data:', error);
+        this.logger.error('Error exporting data', { error });
+        this.notify.error('Erro ao exportar dados', String((error as any)?.message ?? error));
       }
     });
   }
@@ -242,7 +249,8 @@ export class ReportsComponent implements OnInit {
         this.showAIModal.set(true);
       },
       error: (error) => {
-        console.error('Error loading AI summary:', error);
+        this.logger.error('Error loading AI summary', { error });
+        this.notify.error('Erro ao gerar resumo IA', String((error as any)?.message ?? error));
         this.loadingAI.set(false);
       }
     });
@@ -257,7 +265,8 @@ export class ReportsComponent implements OnInit {
         this.showGitHubAIModal.set(true);
       },
       error: (error) => {
-        console.error('Error loading GitHub AI analysis:', error);
+        this.logger.error('Error loading GitHub AI analysis', { error });
+        this.notify.error('Erro ao gerar análise IA GitHub', String((error as any)?.message ?? error));
         this.loadingGithubAI.set(false);
       }
     });
