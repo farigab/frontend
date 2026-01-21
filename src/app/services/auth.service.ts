@@ -28,9 +28,16 @@ export class AuthService {
   logout(): void {
     this.http
       .post(`${environment.apiUrl}/auth/logout`, {})
-      .subscribe(() => {
-        this.user.set(null);
-        this.router.navigate(['/login']);
+      .subscribe({
+        next: () => {
+          this.user.set(null);
+          this.router.navigate(['/login']);
+        },
+        error: (err) => {
+          console.error('Erro no logout:', err);
+          this.user.set(null);
+          this.router.navigate(['/login']);
+        }
       });
   }
 
