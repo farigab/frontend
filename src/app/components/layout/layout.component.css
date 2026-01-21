@@ -53,6 +53,27 @@
   letter-spacing: -0.02em;
 }
 
+.logo-image {
+  display: block;
+  width: auto;
+  height: 44px;
+  max-height: 52px;
+  object-fit: contain;
+}
+
+@media (max-width: 480px) {
+  .logo-image {
+    height: 36px;
+  }
+  .logo-text {
+    display: none;
+  }
+}
+
+.logo-text {
+  letter-spacing: -0.02em;
+}
+
 /* Desktop Navigation */
 .desktop-nav {
   display: flex;
