@@ -1,14 +1,13 @@
 import { inject } from '@angular/core';
-import { Router } from '@angular/router';
+import { CanActivateFn, Router } from '@angular/router';
 import { AuthService } from '../services/auth.service';
 import { catchError, map, of } from 'rxjs';
 
-export const authGuard = () => {
+export const authGuard: CanActivateFn = () => {
   const auth = inject(AuthService);
   const router = inject(Router);
 
-  return auth.loadUser().pipe(
-    map(() => true),
-    catchError(() => of(router.createUrlTree(['/login'])))
+  return auth.checkSession().pipe(
+    map(ok => ok || router.createUrlTree(['/login']))
   );
 };

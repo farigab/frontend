@@ -34,12 +34,24 @@ export class AuthService {
       });
   }
 
+  loadUser(): void {
+    this.http.get<AuthUser>(`${environment.apiUrl}/user`)
+      .subscribe(user => {
+        this.user.set(user);
+      });
+  }
 
-  loadUser() {
+  checkSession() {
+    if (this.user()) {
+      return of(true);
+    }
+
     return this.http
       .get<AuthUser>(`${environment.apiUrl}/user`, { withCredentials: true })
       .pipe(
-        tap(user => this.user.set(user))
+        tap(user => this.user.set(user)),
+        map(() => true),
+        catchError(() => of(false))
       );
   }
 }
