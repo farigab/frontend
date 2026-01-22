@@ -53,7 +53,7 @@
     </ng-template>
     <div class="modal-ai-content">
       @if (aiSummary()) {
-      <div class="ai-text" [innerHTML]="aiSummary()!.ai_generated_report | markdown"></div>
+      <div class="ai-text" [innerHTML]="aiSummary()!.aiGeneratedReport | markdown"></div>
       }
     </div>
   </p-dialog>
@@ -74,7 +74,7 @@
     </ng-template>
     <div class="modal-ai-content">
       @if (aiGithubAnalysis()) {
-      <p class="ai-text" style="white-space: pre-wrap;">{{ aiGithubAnalysis()!.ai_analysis }}</p>
+      <p class="ai-text" style="white-space: pre-wrap;">{{ aiGithubAnalysis()!.aiAnalysis }}</p>
       }
     </div>
   </p-dialog>

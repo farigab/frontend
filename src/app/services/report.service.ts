@@ -7,7 +7,6 @@ import {
   AIGitHubAnalysis,
   AISummaryReport,
   CategoryReport,
-  GitHubStats,
   PeriodReport,
   SummaryReport,
   TimelineReport
@@ -89,21 +88,6 @@ export class ReportService {
     this.errorSignal.set(null);
 
     return this.http.get<TimelineReport>(`${this.apiUrl}/timeline`).pipe(
-      tap({
-        next: () => this.loadingSignal.set(false),
-        error: (err) => {
-          this.errorSignal.set(err.message);
-          this.loadingSignal.set(false);
-        }
-      })
-    );
-  }
-
-  getGitHubStats(): Observable<GitHubStats> {
-    this.loadingSignal.set(true);
-    this.errorSignal.set(null);
-
-    return this.http.get<GitHubStats>(`${this.apiUrl}/github-stats`).pipe(
       tap({
         next: () => this.loadingSignal.set(false),
         error: (err) => {

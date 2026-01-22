@@ -6,7 +6,7 @@ import { ChartModule } from 'primeng/chart';
 import { DatePickerModule } from 'primeng/datepicker';
 import { DialogModule } from 'primeng/dialog';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
-import { AIGitHubAnalysis, AISummaryReport, GitHubStats, PeriodReport } from '../../models/report.model';
+import { AIGitHubAnalysis, AISummaryReport, PeriodReport } from '../../models/report.model';
 import { MarkdownPipe } from '../../pipes/markdown.pipe';
 import { LoggingService } from '../../services/logging.service';
 import { NotificationService } from '../../services/notification.service';
@@ -44,7 +44,6 @@ export class ReportsComponent implements OnInit {
   }
 
   periodReport = signal<PeriodReport | null>(null);
-  githubStats = signal<GitHubStats | null>(null);
   loading = signal(false);
 
   aiSummary = signal<AISummaryReport | null>(null);
@@ -62,7 +61,6 @@ export class ReportsComponent implements OnInit {
   githubChartOptions = signal<any>(null);
 
   ngOnInit() {
-    this.loadGitHubStats();
     this.generatePeriodReport();
   }
 
@@ -82,19 +80,6 @@ export class ReportsComponent implements OnInit {
         this.logger.error('Error loading period report', { error });
         this.notify.error('Erro ao gerar relatório', String((error as any)?.message ?? error));
         this.loading.set(false);
-      }
-    });
-  }
-
-  loadGitHubStats() {
-    this.reportService.getGitHubStats().subscribe({
-      next: (data) => {
-        this.githubStats.set(data);
-        this.setupGitHubChart(data);
-      },
-      error: (error) => {
-        this.logger.error('Error loading GitHub stats', { error });
-        this.notify.error('Erro ao carregar estatísticas do GitHub', String((error as any)?.message ?? error));
       }
     });
   }
@@ -164,47 +149,6 @@ export class ReportsComponent implements OnInit {
       plugins: {
         legend: {
           position: 'bottom'
-        }
-      }
-    });
-  }
-
-  setupGitHubChart(stats: GitHubStats) {
-    if (!stats) return;
-
-    this.githubChartData.set({
-      labels: ['Pull Requests', 'Issues', 'Commits', 'Repositories'],
-      datasets: [
-        {
-          label: 'GitHub Stats',
-          data: [
-            stats.pull_requests,
-            stats.issues,
-            stats.commits,
-            stats.repositories
-          ],
-          backgroundColor: [
-            '#28A745',
-            '#007BFF',
-            '#FFC107',
-            '#DC3545'
-          ]
-        }
-      ]
-    });
-
-    this.githubChartOptions.set({
-      plugins: {
-        legend: {
-          display: false
-        }
-      },
-      scales: {
-        y: {
-          beginAtZero: true,
-          ticks: {
-            stepSize: 1
-          }
         }
       }
     });

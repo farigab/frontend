@@ -26,29 +26,20 @@ export interface TimelineReport {
   readonly timeline: Record<string, Achievement[]>;
 }
 
-export interface GitHubStats {
-  readonly total_github_achievements: number;
-  readonly pull_requests: number;
-  readonly issues: number;
-  readonly commits: number;
-  readonly repositories: number;
-  readonly by_type: Record<string, number>;
-}
-
 export interface AISummaryReport {
-  readonly report_type: string;
-  readonly total_achievements: number;
-  readonly ai_generated_report: string;
-  readonly filters_applied: {
+  readonly reportType: string;
+  readonly totalAchievements: number;
+  readonly aiGeneratedReport: string;
+  readonly filtersApplied: {
     readonly category: string;
-    readonly start_date: string | null;
-    readonly end_date: string | null;
+    readonly startDate: string | null;
+    readonly endDate: string | null;
   };
 }
 
 export interface AIGitHubAnalysis {
-  readonly total_github_achievements: number;
-  readonly ai_analysis: string;
+  readonly totalGithubAchievements: number;
+  readonly aiAnalysis: string;
   readonly statistics: Record<string, number>;
 }
 
