@@ -1,4 +1,4 @@
-import { HTTP_INTERCEPTORS, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { ApplicationConfig, provideZoneChangeDetection } from '@angular/core';
 import { provideRouter, withComponentInputBinding, withViewTransitions } from '@angular/router';
 import Aura from '@primeuix/themes/aura';
@@ -7,7 +7,7 @@ import { providePrimeNG } from 'primeng/config';
 import './polyfills';
 
 import { routes } from './app.routes';
-import { CredentialsInterceptor } from './interceptors/credentials.interceptor';
+import { authInterceptor } from './interceptors/auth.interceptor';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -19,16 +19,17 @@ export const appConfig: ApplicationConfig = {
       withViewTransitions(),
     ),
 
-    { provide: HTTP_INTERCEPTORS, useClass: CredentialsInterceptor, multi: true },
-    provideHttpClient(withInterceptorsFromDi()),
+    provideHttpClient(
+      withInterceptors([authInterceptor])
+    ),
 
     providePrimeNG({
       theme: {
         preset: Aura,
         options: { darkModeSelector: 'none' }
       }
-    })
-    ,
+    }),
+
     MessageService
   ]
 };

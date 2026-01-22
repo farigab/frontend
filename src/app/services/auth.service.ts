@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable, signal } from '@angular/core';
 import { Router } from '@angular/router';
-import { catchError, map, of, tap } from 'rxjs';
+import { catchError, map, Observable, of, tap } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { LoggingService } from './logging.service';
 import { NotificationService } from './notification.service';
@@ -16,14 +16,14 @@ export interface AuthUser {
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
-
   readonly user = signal<AuthUser | null>(null);
   readonly router = inject(Router);
 
   private readonly logger = inject(LoggingService);
   private readonly notify = inject(NotificationService);
+  private readonly http = inject(HttpClient);
 
-  private http = inject(HttpClient);
+  private refreshInProgress = signal<boolean>(false);
 
   loginWithGithub(): void {
     const redirect = `${location.origin}/auth-callback`;
@@ -54,7 +54,7 @@ export class AuthService {
       });
   }
 
-  checkSession() {
+  checkSession(): Observable<boolean> {
     if (this.user()) {
       return of(true);
     }
@@ -66,5 +66,39 @@ export class AuthService {
         map(() => true),
         catchError(() => of(false))
       );
+  }
+
+  /**
+   * Solicita um novo token JWT usando o refresh token
+   */
+  refreshToken(): Observable<boolean> {
+    if (this.refreshInProgress()) {
+      return of(false);
+    }
+
+    this.refreshInProgress.set(true);
+
+    return this.http
+      .post(`${environment.apiUrl}/auth/refresh`, {}, { withCredentials: true })
+      .pipe(
+        map(() => {
+          this.refreshInProgress.set(false);
+          return true;
+        }),
+        catchError((err) => {
+          this.refreshInProgress.set(false);
+          this.logger.error('Erro ao renovar token', { err });
+
+          // Se o refresh falhar, desloga o usuário
+          this.user.set(null);
+          this.router.navigate(['/login']);
+
+          return of(false);
+        })
+      );
+  }
+
+  isRefreshInProgress(): boolean {
+    return this.refreshInProgress();
   }
 }
