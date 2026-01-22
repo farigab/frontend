@@ -46,7 +46,7 @@
       <div class="header-actions">
         @if (user(); as u) {
         <div class="user-info">
-          <img [src]="u.avatar" [alt]="u.name">
+          <img [src]="u.avatarUrl" [alt]="u.name">
           <div class="user-details">
             <button (click)="logout()" class="logout-btn" pButton label="Sair" icon="pi pi-sign-out" [text]="true"
               [size]="'small'">
@@ -75,9 +75,9 @@
 
       @if (user(); as u) {
       <div class="sidebar-user">
-        <p-avatar [image]="u.avatar" [label]="u.name.charAt(0).toUpperCase()" shape="circle"
+        <p-avatar [image]="u.avatarUrl" [label]="u.name.charAt(0).toUpperCase()" shape="circle"
           styleClass="sidebar-avatar-image">
-        </p-avatar> 
+        </p-avatar>
       </div>
       }
     </ng-template>

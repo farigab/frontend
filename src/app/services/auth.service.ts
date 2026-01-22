@@ -10,7 +10,7 @@ export interface AuthUser {
   readonly id: number;
   readonly login: string;
   readonly name: string;
-  readonly avatar?: string;
+  readonly avatarUrl?: string;
   readonly email?: string;
 }
 
