@@ -1,15 +1,11 @@
-.import-container {
-  /* column content: keep padding but allow flexible width inside integrated layout */
-  margin: 0;
-  padding: calc(var(--spacing-lg)) var(--spacing-md);
-  height: 100%;
-  overflow: auto;
-}
+/* ==========================================
+   GITHUB IMPORT COMPONENT
+   Design System Compliant - Sem Overrides
+   ========================================== */
 
 :host {
   display: block;
   height: calc(100vh - 120px);
-  /* leave space for app header/footer — adjust if needed */
 }
 
 .integrated-container {
@@ -23,19 +19,17 @@
   padding: var(--spacing-lg);
 }
 
-.reports-wrapper {
+.import-container {
+  margin: 0;
+  padding: var(--spacing-lg) var(--spacing-md);
   height: 100%;
   overflow: auto;
-  padding-left: var(--spacing-md);
 }
 
-.import-header {
-  display: flex;
-  align-items: center;
-  margin-bottom: var(--spacing-2xl);
-}
+/* ==========================================
+   PAGE HEADER
+   ========================================== */
 
-/* Page header inside left column */
 .page-header {
   display: flex;
   align-items: center;
@@ -44,135 +38,32 @@
   margin-bottom: var(--spacing-lg);
 }
 
+.page-header-content {
+  flex: 1;
+}
+
 .page-title {
   font-size: clamp(1.75rem, 3.2vw, 2.5rem);
-  color: var(--apple-gray-100);
+  color: var(--text-primary);
   margin: 0 0 0.25rem 0;
-}
-
-.page-subtitle {
-  color: var(--apple-gray-400);
-  margin: 0;
-}
-
-.btn-export ::ng-deep button {
-  background: transparent;
-}
-
-/* Side panel and cards */
-.side-panel {
-  display: flex;
-  flex-direction: column;
-  gap: var(--spacing-md);
-  height: 100%;
-  position: sticky;
-  top: 20px;
-}
-
-.side-card {
-  background: rgba(15, 15, 16, 0.7);
-  border-radius: var(--radius-md);
-  padding: var(--spacing-md);
-  color: var(--apple-gray-100);
-  border: 1px solid var(--border);
-  box-shadow: 0 6px 20px rgba(107, 93, 211, 0.08);
-}
-
-.side-card h3 {
-  margin: 0 0 var(--spacing-sm) 0;
-  font-size: 1rem;
-}
-
-.credits-value {
-  font-size: 2rem;
-  font-weight: var(--font-weight-bold);
-  color: var(--success);
-}
-
-.buy-actions {
-  display: flex;
-  flex-direction: column;
-  gap: var(--spacing-sm);
-  margin-top: var(--spacing-md);
-}
-
-.github-connected {
-  display: flex;
-  gap: var(--spacing-md);
-  align-items: center;
-}
-
-.gh-avatar {
-  width: 48px;
-  height: 48px;
-  background: var(--primary);
-  border-radius: 8px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: white;
-  font-weight: 700;
-}
-
-.gh-avatar-img {
-  width: 48px;
-  height: 48px;
-  border-radius: 8px;
-  object-fit: cover;
-  display: block;
-}
-
-.gh-info .gh-user {
   font-weight: var(--font-weight-semibold);
 }
 
-.gh-sub {
-  color: var(--apple-gray-400);
-  font-size: 0.875rem;
+.page-subtitle {
+  color: var(--text-secondary);
+  margin: 0;
 }
 
-.gh-actions {
+/* ==========================================
+   IMPORT HEADER E STEPS
+   ========================================== */
+
+.import-header {
   display: flex;
-  gap: 8px;
-  margin-left: auto;
-}
-
-.stats-list {
-  display: flex;
-  gap: var(--spacing-md);
-}
-
-.stat-item {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
-
-.stat-val {
-  font-weight: var(--font-weight-bold);
-  font-size: 1.5rem;
-}
-
-.stat-label {
-  color: var(--apple-gray-400);
-  font-size: 0.875rem;
-}
-
-.your-reports-card {
-  margin-top: var(--spacing-lg);
-  background: rgba(20, 20, 22, 0.6);
-  color: var(--apple-gray-100);
-}
-
-.reports-empty {
-  display: flex;
-  flex-direction: column;
   align-items: center;
-  gap: var(--spacing-sm);
-  padding: var(--spacing-lg);
+  margin-bottom: var(--spacing-2xl);
 }
 
-/* Steps - Apple Style com Glassmorphism */
 .steps {
   display: flex;
   gap: var(--spacing-md);
@@ -185,55 +76,56 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  font-weight: var(--font-weight-bold);
+  font-weight: var(--font-weight-semibold);
   font-size: 1.125rem;
-  background: rgba(42, 39, 61, 0.6);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  color: var(--apple-gray-400);
-  border: 2px solid var(--apple-gray-200);
+  background: var(--surface);
+  color: var(--text-disabled);
+  border: 2px solid var(--border);
   transition: all var(--transition-base);
-  box-shadow: var(--shadow-xs);
 }
 
 .step.active {
   background: var(--primary);
-  color: white;
-  border-color: transparent;
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+  color: #ffffff;
+  border-color: var(--primary);
   transform: scale(1.06);
 }
 
 .step.completed {
   background: var(--success);
-  color: white;
-  border-color: transparent;
-  box-shadow: var(--shadow-sm);
+  color: var(--bg);
+  border-color: var(--success);
 }
 
 .spacer {
   flex: 1;
 }
 
-/* Typography */
+/* ==========================================
+   TYPOGRAPHY
+   ========================================== */
+
 .section-title {
   font-size: clamp(1.75rem, 4vw, 2.25rem);
-  font-weight: var(--font-weight-extrabold);
+  font-weight: var(--font-weight-semibold);
   margin: 0 0 var(--spacing-sm) 0;
-  color: var(--apple-gray-900);
+  color: var(--text-primary);
   letter-spacing: -0.02em;
-  line-height: 1.2;
+  line-height: var(--line-height-heading);
 }
 
 .subtitle {
-  color: var(--apple-gray-500);
+  color: var(--text-secondary);
   margin: 0 0 var(--spacing-xl) 0;
-  font-size: 1rem;
+  font-size: var(--font-size-body);
   line-height: 1.6;
-  font-weight: var(--font-weight-regular);
+  font-weight: var(--font-weight-normal);
 }
 
-/* Form Styles - Apple Aesthetic */
+/* ==========================================
+   FORM STYLES
+   ========================================== */
+
 .form-row {
   display: flex;
   flex-direction: column;
@@ -243,58 +135,26 @@
 
 .form-row label {
   font-weight: var(--font-weight-semibold);
-  color: var(--apple-gray-800);
+  color: var(--text-primary);
   font-size: 0.9375rem;
 }
 
-.form-row input[type="text"] {
-  padding: 0.875rem 1rem;
-  border-radius: var(--radius-md);
-  border: 2px solid var(--apple-gray-200);
-  background: white;
-  font-size: 1rem;
-  font-family: var(--font-family);
-  transition: all var(--transition-fast);
-  box-shadow: var(--shadow-xs);
-  color: var(--apple-gray-900);
-}
-
-.form-row input[type="text"]:hover {
-  border-color: var(--apple-gray-300);
-}
-
-.form-row input[type="text"]:focus {
-  outline: none;
-  border-color: var(--apple-blue);
-  box-shadow: 0 0 0 4px rgba(107, 93, 211, 0.1), var(--shadow-sm);
-}
-
-.form-row input[type="text"]::placeholder {
-  color: var(--apple-gray-400);
-}
-
 .help-text {
-  color: var(--apple-gray-500);
-  font-size: 0.875rem;
+  color: var(--text-secondary);
+  font-size: var(--font-size-caption);
   line-height: 1.5;
 }
 
 .help-text a {
-  color: var(--apple-blue);
+  color: var(--primary);
   text-decoration: none;
   font-weight: var(--font-weight-medium);
   transition: color var(--transition-fast);
 }
 
 .help-text a:hover {
-  color: var(--apple-blue-hover);
+  color: var(--primary-hover);
   text-decoration: underline;
-}
-
-.help-text a:focus-visible {
-  outline: 2px solid var(--apple-blue);
-  outline-offset: 2px;
-  border-radius: var(--radius-sm);
 }
 
 .buttons {
@@ -304,7 +164,10 @@
   margin-top: var(--spacing-2xl);
 }
 
-/* Card Header */
+/* ==========================================
+   CARD HEADER
+   ========================================== */
+
 .card-header {
   display: flex;
   justify-content: space-between;
@@ -317,12 +180,15 @@
 .card-header h3 {
   margin: 0;
   font-size: 1.25rem;
-  font-weight: var(--font-weight-bold);
-  color: var(--apple-gray-900);
+  font-weight: var(--font-weight-semibold);
+  color: var(--text-primary);
   letter-spacing: -0.01em;
 }
 
-/* Repository Actions */
+/* ==========================================
+   REPOSITORY ACTIONS
+   ========================================== */
+
 .repo-actions {
   display: flex;
   gap: var(--spacing-lg);
@@ -331,7 +197,7 @@
 .link-button {
   background: none;
   border: none;
-  color: var(--apple-blue);
+  color: var(--primary);
   cursor: pointer;
   font-size: 0.9375rem;
   font-weight: var(--font-weight-semibold);
@@ -344,20 +210,17 @@
 
 .link-button:hover {
   background: rgba(107, 93, 211, 0.1);
-  color: var(--apple-blue-hover);
+  color: var(--primary-hover);
 }
 
 .link-button:active {
   transform: scale(0.98);
-  background: rgba(107, 93, 211, 0.15);
 }
 
-.link-button:focus-visible {
-  outline: 2px solid var(--apple-blue);
-  outline-offset: 2px;
-}
+/* ==========================================
+   REPOSITORY GRID
+   ========================================== */
 
-/* Repository Grid - Glassmorphism */
 .repo-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
@@ -366,9 +229,9 @@
   max-height: 440px;
   overflow-y: auto;
   padding: var(--spacing-md);
-  border: 2px solid var(--border);
+  border: 1px solid var(--border);
   border-radius: var(--radius-md);
-  background: var(--surface);
+  background: var(--bg);
 }
 
 .repo-grid::-webkit-scrollbar {
@@ -376,25 +239,27 @@
 }
 
 .repo-grid::-webkit-scrollbar-track {
-  background: var(--apple-gray-100);
+  background: transparent;
   border-radius: var(--radius-md);
 }
 
 .repo-grid::-webkit-scrollbar-thumb {
-  background: var(--apple-gray-300);
+  background: var(--border);
   border-radius: var(--radius-full);
-  border: 2px solid var(--apple-gray-100);
   transition: background var(--transition-fast);
 }
 
 .repo-grid::-webkit-scrollbar-thumb:hover {
-  background: var(--apple-gray-400);
+  background: var(--primary);
 }
 
-/* Repository Card - Enhanced */
+/* ==========================================
+   REPOSITORY CARD
+   ========================================== */
+
 .repo-card {
   padding: var(--spacing-md);
-  border: 2px solid var(--border);
+  border: 1px solid var(--border);
   border-radius: var(--radius-md);
   background: var(--surface);
   transition: all var(--transition-fast);
@@ -402,7 +267,6 @@
 }
 
 .repo-card:hover {
-  background: var(--surface);
   border-color: var(--primary);
   box-shadow: var(--shadow-sm);
   transform: translateY(-2px);
@@ -412,10 +276,6 @@
   background: rgba(107, 93, 211, 0.08);
   border-color: var(--primary);
   box-shadow: 0 0 0 4px rgba(107, 93, 211, 0.1);
-}
-
-.repo-card:active {
-  transform: translateY(0);
 }
 
 .repo-checkbox {
@@ -431,37 +291,30 @@
   width: 1.25rem;
   height: 1.25rem;
   border-radius: var(--radius-sm);
-  border: 2px solid var(--apple-gray-300);
   transition: all var(--transition-fast);
-  accent-color: var(--apple-blue);
+  accent-color: var(--primary);
   flex-shrink: 0;
-}
-
-.repo-checkbox input[type="checkbox"]:hover {
-  border-color: var(--apple-blue);
-}
-
-.repo-checkbox input[type="checkbox"]:focus-visible {
-  outline: 2px solid var(--apple-blue);
-  outline-offset: 2px;
 }
 
 .repo-name {
   font-size: 0.9375rem;
   font-weight: var(--font-weight-medium);
-  color: var(--apple-gray-800);
+  color: var(--text-primary);
   word-break: break-word;
   line-height: 1.4;
 }
 
-/* Repository Footer */
+/* ==========================================
+   REPOSITORY FOOTER
+   ========================================== */
+
 .repo-footer {
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-top: var(--spacing-2xl);
   padding-top: var(--spacing-xl);
-  border-top: 2px solid var(--apple-gray-200);
+  border-top: 1px solid var(--border);
   gap: var(--spacing-lg);
   flex-wrap: wrap;
 }
@@ -473,17 +326,20 @@
 }
 
 .timer {
-  font-size: 0.875rem;
-  color: var(--apple-gray-600);
+  font-size: var(--font-size-caption);
+  color: var(--text-secondary);
   font-style: italic;
   font-weight: var(--font-weight-medium);
   padding: var(--spacing-sm) var(--spacing-md);
-  background: rgba(107, 114, 128, 0.08);
+  background: rgba(107, 93, 211, 0.08);
   border-radius: var(--radius-md);
-  border: 1px solid rgba(107, 114, 128, 0.15);
+  border: 1px solid rgba(107, 93, 211, 0.15);
 }
 
-/* Date Range Container */
+/* ==========================================
+   DATE RANGE
+   ========================================== */
+
 .date-range-container {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -491,7 +347,10 @@
   margin: var(--spacing-xl) 0 var(--spacing-2xl) 0;
 }
 
-/* Summary Section - Enhanced Glassmorphism */
+/* ==========================================
+   SUMMARY SECTION
+   ========================================== */
+
 .summary-section {
   margin: var(--spacing-2xl) 0;
   padding: var(--spacing-xl);
@@ -504,17 +363,12 @@
 .summary-section h3 {
   margin: 0 0 var(--spacing-lg) 0;
   font-size: 1.125rem;
-  font-weight: var(--font-weight-bold);
-  color: var(--apple-gray-900);
+  font-weight: var(--font-weight-semibold);
+  color: var(--text-primary);
   display: flex;
   align-items: center;
   gap: var(--spacing-sm);
   letter-spacing: -0.01em;
-}
-
-.summary-section h3::before {
-  content: '📋';
-  font-size: 1.25rem;
 }
 
 .summary-list {
@@ -525,10 +379,10 @@
 
 .summary-list li {
   padding: var(--spacing-md) 0;
-  color: var(--apple-gray-700);
+  color: var(--text-secondary);
   font-size: 0.9375rem;
   line-height: 1.6;
-  border-bottom: 1px solid rgba(107, 93, 211, 0.12);
+  border-bottom: 1px solid var(--border);
 }
 
 .summary-list li:last-child {
@@ -537,12 +391,15 @@
 }
 
 .summary-list strong {
-  color: var(--apple-gray-900);
+  color: var(--text-primary);
   margin-right: var(--spacing-sm);
   font-weight: var(--font-weight-semibold);
 }
 
-/* Success Container - Enhanced Animations */
+/* ==========================================
+   SUCCESS CONTAINER
+   ========================================== */
+
 .success-container {
   text-align: center;
   padding: var(--spacing-3xl) var(--spacing-md);
@@ -555,7 +412,7 @@
   margin-bottom: var(--spacing-xl);
   animation: scaleInBounce var(--transition-slower) cubic-bezier(0.34, 1.56, 0.64, 1);
   display: inline-block;
-  filter: drop-shadow(0 4px 8px rgba(122, 111, 224, 0.2));
+  filter: drop-shadow(0 4px 8px rgba(155, 255, 161, 0.2));
 }
 
 @keyframes scaleInBounce {
@@ -590,25 +447,26 @@
   }
 }
 
-/* Result Details - Enhanced */
+/* ==========================================
+   RESULT DETAILS
+   ========================================== */
+
 .result-details {
   margin: var(--spacing-2xl) auto;
   padding: var(--spacing-xl);
   background: var(--surface);
   border-radius: var(--radius-lg);
-  border: 2px solid var(--apple-gray-200);
+  border: 1px solid var(--border);
   text-align: left;
   max-width: 600px;
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
   box-shadow: var(--shadow-md);
 }
 
 .result-details h3 {
   margin: 0 0 var(--spacing-lg) 0;
   font-size: 1.125rem;
-  font-weight: var(--font-weight-bold);
-  color: var(--apple-gray-900);
+  font-weight: var(--font-weight-semibold);
+  color: var(--text-primary);
   letter-spacing: -0.01em;
 }
 
@@ -616,22 +474,99 @@
   margin: 0;
   white-space: pre-wrap;
   word-wrap: break-word;
-  font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Code', 'Courier New', monospace;
-  font-size: 0.875rem;
-  color: var(--apple-gray-700);
-  background: rgba(249, 250, 251, 0.8);
+  font-family: 'SF Mono', 'Monaco', 'Inconsolata', monospace;
+  font-size: var(--font-size-caption);
+  color: var(--text-secondary);
+  background: var(--bg);
   padding: var(--spacing-lg);
   border-radius: var(--radius-md);
   overflow-x: auto;
-  border: 1px solid var(--apple-gray-200);
-  box-shadow: var(--shadow-xs);
+  border: 1px solid var(--border);
   line-height: 1.6;
 }
 
-/* Responsive Design */
-@media (max-width: 768px) {
+/* ==========================================
+   SIDE PANEL
+   ========================================== */
 
-  /* Switch to stacked layout on small screens */
+.side-panel {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+  height: 100%;
+  position: sticky;
+  top: 20px;
+}
+
+.side-card {
+  background: var(--surface);
+  border-radius: var(--radius-md);
+  padding: var(--spacing-md);
+  color: var(--text-primary);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-sm);
+}
+
+.side-card-header {
+  display: flex;
+  align-items: center;
+  font-weight: var(--font-weight-semibold);
+  margin-bottom: var(--spacing-md);
+  color: var(--text-primary);
+}
+
+.side-card-body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+}
+
+.github-connected {
+  display: flex;
+  gap: var(--spacing-md);
+  align-items: center;
+}
+
+.gh-avatar {
+  width: 48px;
+  height: 48px;
+  background: var(--primary);
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: var(--font-weight-semibold);
+}
+
+.gh-avatar-img {
+  width: 48px;
+  height: 48px;
+  border-radius: var(--radius-sm);
+  object-fit: cover;
+  display: block;
+}
+
+.gh-info {
+  flex: 1;
+}
+
+.gh-user {
+  font-weight: var(--font-weight-semibold);
+  color: var(--text-primary);
+}
+
+.gh-actions {
+  display: flex;
+  gap: var(--spacing-sm);
+  margin-left: auto;
+}
+
+/* ==========================================
+   RESPONSIVE DESIGN
+   ========================================== */
+
+@media (max-width: 768px) {
   .integrated-container {
     grid-template-columns: 1fr;
     padding: var(--spacing-md);
@@ -666,16 +601,8 @@
     width: 100%;
   }
 
-  .footer-actions button {
-    width: 100%;
-  }
-
   .buttons {
     flex-direction: column;
-  }
-
-  .buttons button {
-    width: 100%;
   }
 
   .repo-grid {
@@ -692,84 +619,4 @@
   .steps {
     gap: var(--spacing-sm);
   }
-}
-
-/* PrimeNG DatePicker Customization */
-::ng-deep .p-datepicker {
-  border-radius: var(--radius-md) !important;
-  border: 2px solid var(--apple-gray-200) !important;
-  box-shadow: var(--shadow-lg) !important;
-  background: var(--surface) !important;
-  backdrop-filter: blur(20px) !important;
-  -webkit-backdrop-filter: blur(20px) !important;
-}
-
-::ng-deep .p-datepicker input {
-  padding: 0.875rem 1rem !important;
-  border-radius: var(--radius-md) !important;
-  border: 2px solid var(--apple-gray-200) !important;
-  font-size: 1rem !important;
-  font-family: var(--font-family) !important;
-  transition: all var(--transition-fast) !important;
-  box-shadow: var(--shadow-xs) !important;
-}
-
-::ng-deep .p-datepicker input:hover {
-  border-color: var(--apple-gray-300) !important;
-}
-
-::ng-deep .p-datepicker input:focus {
-  border-color: var(--apple-blue) !important;
-  box-shadow: 0 0 0 4px rgba(107, 93, 211, 0.1), var(--shadow-sm) !important;
-  outline: none !important;
-}
-
-::ng-deep .p-datepicker .p-datepicker-header {
-  background: transparent !important;
-  border-bottom: 1px solid var(--apple-gray-200) !important;
-  padding: var(--spacing-md) !important;
-}
-
-::ng-deep .p-datepicker .p-datepicker-header .p-datepicker-title {
-  font-weight: var(--font-weight-semibold) !important;
-  color: var(--apple-gray-900) !important;
-}
-
-::ng-deep .p-datepicker table td>span {
-  border-radius: var(--radius-sm) !important;
-  transition: all var(--transition-fast) !important;
-}
-
-::ng-deep .p-datepicker table td>span:hover {
-  background: rgba(107, 93, 211, 0.1) !important;
-}
-
-::ng-deep .p-datepicker table td>span.p-highlight {
-  background: var(--apple-blue) !important;
-  color: white !important;
-}
-
-/* Loading Animation */
-@keyframes spin {
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-::ng-deep .p-button-loading-icon {
-  animation: spin 1s linear infinite;
-}
-
-/* Smooth Transitions */
-* {
-  transition-property: background-color, border-color, color, fill, stroke, opacity, box-shadow, transform;
-  transition-duration: var(--transition-fast);
-  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-button,
-input,
-select,
-textarea {
-  transition-property: all;
 }
