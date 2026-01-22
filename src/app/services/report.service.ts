@@ -6,9 +6,6 @@ import { Achievement } from '../models/achievement.model';
 import {
   AIGitHubAnalysis,
   AISummaryReport,
-  CategoryReport,
-  PeriodReport,
-  SummaryReport,
   TimelineReport
 } from '../models/report.model';
 
@@ -20,68 +17,11 @@ export class ReportService {
   private readonly apiUrl = `${environment.apiUrl}/reports`;
 
   // State management with signals
-  private readonly summarySignal = signal<SummaryReport | null>(null);
   private readonly loadingSignal = signal<boolean>(false);
   private readonly errorSignal = signal<string | null>(null);
 
-  readonly summary = this.summarySignal.asReadonly();
   readonly loading = this.loadingSignal.asReadonly();
   readonly error = this.errorSignal.asReadonly();
-
-  getSummary(): Observable<SummaryReport> {
-    this.loadingSignal.set(true);
-    this.errorSignal.set(null);
-
-    return this.http.get<SummaryReport>(`${this.apiUrl}/summary`).pipe(
-      tap({
-        next: (data) => {
-          this.summarySignal.set(data);
-          this.loadingSignal.set(false);
-        },
-        error: (err) => {
-          this.errorSignal.set(err.message);
-          this.loadingSignal.set(false);
-        }
-      })
-    );
-  }
-
-  getByCategory(category?: string): Observable<CategoryReport> {
-    this.loadingSignal.set(true);
-    this.errorSignal.set(null);
-
-    let params = new HttpParams();
-    if (category) {
-      params = params.set('category', category);
-    }
-    return this.http.get<CategoryReport>(`${this.apiUrl}/by-category`, { params }).pipe(
-      tap({
-        next: () => this.loadingSignal.set(false),
-        error: (err) => {
-          this.errorSignal.set(err.message);
-          this.loadingSignal.set(false);
-        }
-      })
-    );
-  }
-
-  getByPeriod(startDate: string, endDate: string): Observable<PeriodReport> {
-    this.loadingSignal.set(true);
-    this.errorSignal.set(null);
-
-    const params = new HttpParams()
-      .set('startDate', startDate)
-      .set('endDate', endDate);
-    return this.http.get<PeriodReport>(`${this.apiUrl}/by-period`, { params }).pipe(
-      tap({
-        next: () => this.loadingSignal.set(false),
-        error: (err) => {
-          this.errorSignal.set(err.message);
-          this.loadingSignal.set(false);
-        }
-      })
-    );
-  }
 
   getTimeline(): Observable<TimelineReport> {
     this.loadingSignal.set(true);

@@ -6,7 +6,7 @@ import { ChartModule } from 'primeng/chart';
 import { DatePickerModule } from 'primeng/datepicker';
 import { DialogModule } from 'primeng/dialog';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
-import { AIGitHubAnalysis, AISummaryReport, PeriodReport } from '../../models/report.model';
+import { AIGitHubAnalysis, AISummaryReport } from '../../models/report.model';
 import { MarkdownPipe } from '../../pipes/markdown.pipe';
 import { LoggingService } from '../../services/logging.service';
 import { NotificationService } from '../../services/notification.service';
@@ -43,7 +43,6 @@ export class ReportsComponent implements OnInit {
     this._endDate.set(value);
   }
 
-  periodReport = signal<PeriodReport | null>(null);
   loading = signal(false);
 
   aiSummary = signal<AISummaryReport | null>(null);
@@ -61,97 +60,6 @@ export class ReportsComponent implements OnInit {
   githubChartOptions = signal<any>(null);
 
   ngOnInit() {
-    this.generatePeriodReport();
-  }
-
-  generatePeriodReport() {
-    this.loading.set(true);
-    const startDateStr = this.formatDate(this._startDate());
-    const endDateStr = this.formatDate(this._endDate());
-
-    this.reportService.getByPeriod(startDateStr, endDateStr).subscribe({
-      next: (data) => {
-        this.periodReport.set(data);
-        this.setupMonthChart(data);
-        this.setupCategoryChart(data);
-        this.loading.set(false);
-      },
-      error: (error) => {
-        this.logger.error('Error loading period report', { error });
-        this.notify.error('Erro ao gerar relatório', String((error as any)?.message ?? error));
-        this.loading.set(false);
-      }
-    });
-  }
-
-  setupMonthChart(report: PeriodReport) {
-    if (!report?.by_month) return;
-
-    const labels = Object.keys(report.by_month);
-    const data = Object.values(report.by_month);
-
-    this.monthChartData.set({
-      labels: labels,
-      datasets: [
-        {
-          label: 'Achievements por Mês',
-          data: data,
-          backgroundColor: '#42A5F5',
-          borderColor: '#1E88E5',
-          borderWidth: 1
-        }
-      ]
-    });
-
-    this.monthChartOptions.set({
-      maintainAspectRatio: false,
-      aspectRatio: 0.8,
-      plugins: {
-        legend: {
-          display: false
-        }
-      },
-      scales: {
-        y: {
-          beginAtZero: true,
-          ticks: {
-            stepSize: 1
-          }
-        }
-      }
-    });
-  }
-
-  setupCategoryChart(report: PeriodReport) {
-    if (!report?.by_category) return;
-
-    const labels = Object.keys(report.by_category);
-    const data = Object.values(report.by_category);
-
-    this.categoryChartData.set({
-      labels: labels,
-      datasets: [
-        {
-          data: data,
-          backgroundColor: [
-            '#42A5F5',
-            '#66BB6A',
-            '#FFA726',
-            '#AB47BC',
-            '#EC407A',
-            '#26A69A'
-          ]
-        }
-      ]
-    });
-
-    this.categoryChartOptions.set({
-      plugins: {
-        legend: {
-          position: 'bottom'
-        }
-      }
-    });
   }
 
   formatDate(date: Date): string {
