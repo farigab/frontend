@@ -86,22 +86,43 @@
 .step-circle {
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: flex-start;
   gap: var(--spacing-xs);
   font-size: clamp(0.75rem, 2vw, 0.875rem);
   color: var(--text-disabled);
-  transition: all var(--transition-base);
+  transition: transform 140ms var(--transition-ease), box-shadow 140ms var(--transition-ease), color 120ms var(--transition-ease);
   padding: var(--spacing-sm);
-  text-align: center;
+  text-align: left;
+  border-radius: var(--radius-sm);
+  background: transparent;
 }
 
 .step-circle i {
   font-size: clamp(1.25rem, 3vw, 1.5rem);
+  display: inline-block;
+  margin-right: var(--spacing-sm);
 }
 
+.step-circle:not(.active):hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 14px rgba(16, 24, 40, 0.03);
+}
+
+/* Active: sem círculo — usar marcador lateral e texto destacado */
 .step-circle.active {
-  color: var(--primary);
+  color: var(--text-primary);
+  background: rgba(107, 93, 211, 0.04);
   font-weight: var(--font-weight-semibold);
+  box-shadow: none;
+  transform: none;
+  border: none;
+  border-left: 4px solid var(--primary);
+  padding-left: calc(var(--spacing-sm) + 6px);
+}
+
+.step-circle:focus-visible {
+  outline: 3px solid rgba(107, 93, 211, 0.14);
+  outline-offset: 3px;
 }
 
 @media (max-width: 640px) {
