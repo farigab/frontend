@@ -86,6 +86,8 @@ export class GithubImportComponent implements OnInit {
   readonly user = this.authService.user;
 
   readonly customPrompt = signal('');
+  readonly maxPromptLength = 1000;
+  readonly promptLength = computed(() => this.customPrompt().length);
 
   private signalActiveStep = signal<number>(1);
 
@@ -102,9 +104,14 @@ export class GithubImportComponent implements OnInit {
   }
 
   analyzeAI(): void {
-    const prompt = this.customPrompt();
-    if (!prompt || prompt.trim().length === 0) {
+    const prompt = this.customPrompt().trim();
+    if (!prompt || prompt.length === 0) {
       this.showError('Please enter a prompt for AI analysis');
+      return;
+    }
+
+    if (prompt.length > this.maxPromptLength) {
+      this.showError(`Prompt exceeds maximum length of ${this.maxPromptLength} characters`);
       return;
     }
 

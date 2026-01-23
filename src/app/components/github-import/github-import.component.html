@@ -5,7 +5,7 @@
   <div class="import-container">
     <div class="page-header">
       <div class="page-header-content">
-        <h1 class="page-title">Welcome back!</h1>
+        <h1 class="page-title">Good to see you again!</h1>
       </div>
     </div>
 
@@ -152,21 +152,37 @@
         <p-step-panel [value]="4">
           <ng-template #content let-activateCallback="activateCallback">
             <div class="step-content">
-              <h2 class="section-title">Análise com IA</h2>
-              <p class="subtitle">Personalize o prompt para a análise automática</p>
+              <h2 class="section-title">AI Analysis</h2>
+              <p class="subtitle">Customize the prompt for automated analysis</p>
 
-              <div class="form-row">
+              <div class="form-row ai-prompt">
                 <label for="ai-prompt">Prompt para IA</label>
                 <textarea pInputTextarea id="ai-prompt" rows="6" [ngModel]="customPrompt()"
                   (ngModelChange)="customPrompt.set($event)" placeholder="Escreva o prompt para a IA..."
-                  aria-describedby="ai-prompt-help"></textarea>
-                <small id="ai-prompt-help" class="help-text">Use instruções claras e exemplos para melhores
-                  resultados</small>
+                  [attr.maxlength]="maxPromptLength"
+                  aria-describedby="ai-prompt-help ai-prompt-examples ai-prompt-count"
+                  aria-label="Prompt para IA"></textarea>
+
+                <div id="ai-prompt-examples" class="ai-examples" aria-hidden="false">
+                  <strong>Examples</strong>
+                  <ul>
+                    <li>Summarize the most important commits in this repository over the last 30 days.</li>
+                    <li>List the top contributors and explain the impact of their changes.</li>
+                    <li>Detect refactoring patterns and technical debt hotspots.</li>
+                  </ul>
+                </div>
+
+                <div class="ai-prompt-footer">
+                  <small id="ai-prompt-help" class="help-text">Use clear instructions and examples for better
+                    results</small>
+                  <small id="ai-prompt-count" class="help-text" aria-live="polite">{{ promptLength() }} / {{
+                    maxPromptLength }}</small>
+                </div>
               </div>
 
               <div class="step-actions">
                 <p-button label="Back" severity="secondary" [outlined]="true" (onClick)="activateCallback(3)" />
-                <p-button label="Análise IA" icon="pi pi-robot" (onClick)="analyzeAI()" [disabled]="!customPrompt()" />
+                <p-button label="AI Analysis" icon="pi pi-robot" (onClick)="analyzeAI()" [disabled]="!customPrompt()" />
               </div>
             </div>
           </ng-template>
