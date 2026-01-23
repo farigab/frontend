@@ -1,118 +1,98 @@
 # BragDoc Frontend
 
-A modern, Apple-inspired Angular application for tracking professional achievements.
+Frontend web do BragDoc: aplicação Angular para gerenciar e visualizar conquistas profissionais e relatórios.
 
-## 🚀 Technologies
+## 🚀 Tecnologias (versões atuais)
 
-- **Angular 18.2** - Latest stable Angular version with standalone components
-- **PrimeNG 18** - Rich UI component library
-- **TypeScript 5.5** - Strict type checking enabled
-- **Chart.js 4.4** - Data visualization
-- **PrimeFlex** - Flexbox utilities
-- **PrimeIcons** - Icon library
+- **Angular 21.1.0** — Standalone components e recursos modernos
+- **PrimeNG 21.0.4** — Biblioteca de componentes UI
+- **TypeScript 5.9.2** — Tipagem rígida
+- **Chart.js 4.4.0** — Visualização de dados
+- **PrimeFlex** — Utilitários Flexbox
+- **PrimeIcons 7.0.0** — Ícones
 
-## ✨ Features
+## ✨ Recursos principais
 
-- **Apple-Style Design** - Clean, modern UI inspired by Apple's design language
-- **Standalone Components** - Modern Angular architecture without NgModules
-- **Signal-Based State Management** - Reactive state using Angular signals
-- **Lazy Loading** - Optimized bundle sizes with route-level code splitting
-- **Type-Safe** - Strict TypeScript configuration
-- **Responsive** - Mobile-first design approach
-- **Accessible** - WCAG AA compliant
+- Apple-inspired UI com foco em clareza e tipografia
+- Componentes standalone e arquitetura moderna
+- Gerenciamento reativo por sinais (`signal`, `computed`)
+- Lazy loading de rotas para otimização de bundling
+- Formulários reativos tipados
+- Acessibilidade e responsividade (WCAG AA)
 
-## 📁 Project Structure
+## 📁 Estrutura resumida
 
 ```
 src/
 ├── app/
 │   ├── components/
-│   │   ├── achievement-form/      # Form for creating/editing achievements
-│   │   ├── achievement-list/      # List view with filtering and search
-│   │   ├── dashboard/             # Overview with charts and stats
-│   │   ├── layout/                # Main layout with navigation
-│   │   ├── reports/               # Analytics and reports
-│   │   └── timeline/              # Timeline visualization
 │   ├── models/
-│   │   ├── achievement.model.ts   # Achievement types and constants
-│   │   └── report.model.ts        # Report types
 │   ├── services/
-│   │   ├── achievement.service.ts # Achievement API service
-│   │   └── report.service.ts      # Report API service
-│   ├── app.component.ts           # Root component
-│   ├── app.config.ts              # Application configuration
-│   └── app.routes.ts              # Route definitions with lazy loading
+│   ├── app.component.ts
+│   └── app.routes.ts
 ├── environments/
-│   ├── environment.ts             # Production environment
-│   └── environment.development.ts # Development environment
-├── styles.css                     # Global Apple-inspired styles
-├── main.ts                        # Application bootstrap
-└── index.html                     # HTML entry point
+├── styles.css
+├── main.ts
+└── index.html
 ```
 
-## 🎯 Architecture Highlights
+## 🛠️ Desenvolvimento
 
-### Following Angular Best Practices
+### Pré-requisitos
 
-1. **Standalone Components** - All components use `standalone: true`
-2. **Signal-Based State** - Using `signal()`, `computed()` for reactive state
-3. **inject() Function** - Dependency injection using functional approach
-4. **OnPush Change Detection** - Optimized performance
-5. **Lazy Loading** - Routes loaded on-demand
-6. **Reactive Forms** - Type-safe forms with validation
-7. **Strict TypeScript** - Maximum type safety
+- Node.js 18+ (recomendado)
+- npm (ou pnpm)
 
-### Code Quality Standards
-
-- ✅ No `any` types - Strict typing throughout
-- ✅ Readonly properties - Immutability where appropriate
-- ✅ No `@HostBinding`/`@HostListener` - Using host object
-- ✅ No `ngClass`/`ngStyle` - Using class/style bindings
-- ✅ Native control flow - `@if`, `@for`, `@switch`
-- ✅ input()/output() functions - Modern component API
-- ✅ No template arrow functions - Clean templates
-- ✅ No business logic in templates - Component-driven
-
-## 🛠️ Development
-
-### Prerequisites
-
-- Node.js 18+
-- npm 9+
-
-### Installation
+### Instalação
 
 ```bash
 npm install
 ```
 
-### Development Server
+### Executar em desenvolvimento
 
 ```bash
 npm start
 ```
 
-Navigate to `http://localhost:4200/`
+Abra http://localhost:4200/ (ou conforme configuração do projeto).
 
-### Build
+### Build de produção
 
 ```bash
 npm run build
 ```
 
-Production build outputs to `dist/`
+### Scripts comuns
 
-### Configuration
+```bash
+npm start          # servidor de desenvolvimento
+npm run build      # build de produção
+npm run watch      # build em modo watch
+npm test           # executar testes (jest/vitest)
+npm test:watch     # testes em watch
+```
 
-Update API URL in environment files:
+## 🔧 Configuração
 
-**src/environments/environment.ts**
+Atualize a URL da API em `src/environments/environment.ts`:
+
 ```typescript
 export const environment = {
   production: true,
   apiUrl: 'http://localhost:8080/api'
 };
 ```
+
+## 🤝 Contribuições
+
+- Crie uma branch `feature/descricao` ou `fix/descricao`.
+- Abra um PR descrevendo mudanças e como testar.
+- Siga as diretrizes do projeto (componentes standalone, sinais, OnPush, TypeScript estrito, acessibilidade).
+
+## 📄 Licença
+
+Projeto privado (adicione um arquivo LICENSE se quiser publicar).
 
 ## 🎨 Design System
 
@@ -198,4 +178,4 @@ Private project
 
 ---
 
-**Built with ❤️ using Angular 18 and PrimeNG**
+**Built with ❤️ using Angular 21 and PrimeNG**
