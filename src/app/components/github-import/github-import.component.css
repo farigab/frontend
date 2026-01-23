@@ -421,7 +421,7 @@
 .link-button {
   background: none;
   border: none;
-  color: var(--primary);
+  color: var(--text-primary);
   cursor: pointer;
   font-size: clamp(0.875rem, 2vw, 0.9375rem);
   font-weight: var(--font-weight-semibold);
