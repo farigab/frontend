@@ -5,7 +5,7 @@
   <div class="import-container">
     <div class="page-header">
       <div class="page-header-content">
-        <h1 class="page-title">Welcome back!</h1>
+        <h1 class="page-title">Good to see you again{{ user() ? ', ' + (user()?.name || user()?.login) : '' }}!</h1>
       </div>
     </div>
 
@@ -17,6 +17,7 @@
           <ng-template #content let-value="value">
             <span class="step-circle" [class.active]="value <= activeStep">
               <i class="pi pi-github"></i>
+              Connect
             </span>
           </ng-template>
         </p-step>
@@ -25,6 +26,7 @@
           <ng-template #content let-value="value">
             <span class="step-circle" [class.active]="value <= activeStep">
               <i class="pi pi-folder"></i>
+              Repositories
             </span>
           </ng-template>
         </p-step>
@@ -33,6 +35,16 @@
           <ng-template #content let-value="value">
             <span class="step-circle" [class.active]="value <= activeStep">
               <i class="pi pi-calendar"></i>
+              Time Period
+            </span>
+          </ng-template>
+        </p-step>
+
+        <p-step [value]="4" class="step-header">
+          <ng-template #content let-value="value">
+            <span class="step-circle" [class.active]="value <= activeStep">
+              <i class="pi pi-sparkles"></i>
+              AI Analysis
             </span>
           </ng-template>
         </p-step>
@@ -49,8 +61,9 @@
 
               <div class="form-row">
                 <label for="token-input">Personal Access Token</label>
-                <input pInputText id="token-input" type="text" [ngModel]="token()" (ngModelChange)="token.set($event)"
-                  placeholder="ghp_xxxxxxxxxxxxxxxxxxxx" aria-describedby="token-help" />
+                <input pInputText id="token-input" type="password" [ngModel]="token()"
+                  (ngModelChange)="token.set($event)" placeholder="ghp_xxxxxxxxxxxxxxxxxxxx"
+                  aria-describedby="token-help" />
                 <small id="token-help" class="help-text">
                   Create a token at
                   <a href="https://github.com/settings/tokens/new?scopes=repo,read:user&description=farigab-bragdoc"
@@ -109,85 +122,68 @@
           </ng-template>
         </p-step-panel>
 
-        <!-- Step 3: Date Range Selection -->
         <p-step-panel [value]="3">
           <ng-template #content let-activateCallback="activateCallback">
             <div class="step-content">
-              <h2 class="section-title">Select Date Range</h2>
-              <p class="subtitle">Choose the time period for importing data</p>
+              <h2 class="section-title">What time period?</h2>
+              <p class="subtitle">Choose the time range for your report</p>
 
-              <div class="date-range-container">
-                <div class="form-row">
-                  <label for="start-date">Start Date</label>
-                  <p-datepicker inputId="start-date" [ngModel]="startDate()" (ngModelChange)="startDate.set($event)"
-                    dateFormat="yy-mm-dd" [showIcon]="true" placeholder="Select start date" appendTo="body"
-                    [maxDate]="endDate() ?? maxDate" [iconDisplay]="'input'" />
-                </div>
-
-                <div class="form-row">
-                  <label for="end-date">End Date</label>
-                  <p-datepicker inputId="end-date" [ngModel]="endDate()" (ngModelChange)="endDate.set($event)"
-                    dateFormat="yy-mm-dd" [showIcon]="true" placeholder="Select end date" appendTo="body"
-                    [minDate]="startDate()" [maxDate]="maxDate" [iconDisplay]="'input'" />
-                </div>
+              <div class="preset-buttons" role="list">
+                @for (opt of presetOptions; track opt.value) {
+                <button type="button" role="listitem" class="preset-button"
+                  [class.active]="selectedPreset() === opt.value" [attr.aria-pressed]="selectedPreset() === opt.value"
+                  (click)="selectPreset(opt.value)">
+                  {{ opt.label }}
+                </button>
+                }
               </div>
 
-              <div class="summary-section">
-                <h3>Import Summary</h3>
-                <ul class="summary-list">
-                  <li>
-                    <strong>Repositories:</strong>
-                    @if (selectedCount() > 0) {
-                    {{ selectedCount() }} selected
-                    } @else {
-                    All ({{ repositories().length }})
-                    }
-                  </li>
-                  @if (hasDateRange()) {
-                  <li>
-                    <strong>Date Range:</strong>
-                    {{ startDate()!.toLocaleDateString() }} - {{ endDate()!.toLocaleDateString() }}
-                  </li>
-                  }
-                </ul>
+
+              <div class="step-actions">
+                <p-button label="Back" severity="secondary" [outlined]="true" (onClick)="activateCallback(2)" />
+                <p-button label="Continue" (onClick)="activateCallback(4)" [disabled]="!hasDateRange()" />
+              </div>
+            </div>
+          </ng-template>
+        </p-step-panel>
+
+
+        <!-- Step 4: AI Prompt & Analysis -->
+        <p-step-panel [value]="4">
+          <ng-template #content let-activateCallback="activateCallback">
+            <div class="step-content">
+              <h2 class="section-title">AI Analysis</h2>
+              <p class="subtitle">Customize the prompt for automated analysis</p>
+
+              <div class="form-row ai-prompt">
+                <label for="ai-prompt">AI Prompt</label>
+                <textarea pInputTextarea id="ai-prompt" rows="6" [ngModel]="customPrompt()"
+                  (ngModelChange)="customPrompt.set($event)" placeholder="Write the prompt for the AI..."
+                  [attr.maxlength]="maxPromptLength"
+                  aria-describedby="ai-prompt-help ai-prompt-examples ai-prompt-count"
+                  aria-label="AI Prompt"></textarea>
+
+                <div id="ai-prompt-examples" class="ai-examples" aria-hidden="false">
+                  <strong>Examples</strong>
+                  <ul>
+                    <li>Summarize the most important commits in this repository over the last 30 days.</li>
+                    <li>List the top contributors and explain the impact of their changes.</li>
+                    <li>Detect refactoring patterns and technical debt hotspots.</li>
+                  </ul>
+                </div>
+
+                <div class="ai-prompt-footer">
+                  <small id="ai-prompt-help" class="help-text">Use clear instructions and examples for better
+                    results</small>
+                  <small id="ai-prompt-count" class="help-text" aria-live="polite">{{ promptLength() }} / {{
+                    maxPromptLength }}</small>
+                </div>
               </div>
 
               <div class="step-actions">
-                <p-button label="Back" severity="secondary" [outlined]="true" (onClick)="activateCallback(2)"
-                  [disabled]="isImporting()" />
-                <div class="footer-actions">
-                  <div class="timer">
-                    @if (isImporting()) {
-                    Importing data...
-                    } @else {
-                    ~30 seconds to generate
-                    }
-                  </div>
-                  <p-button label="Start Import" icon="pi pi-download" (onClick)="startImport()"
-                    [disabled]="!hasDateRange()" [loading]="isImporting()" />
-                </div>
+                <p-button label="Back" severity="secondary" [outlined]="true" (onClick)="activateCallback(3)" />
+                <p-button label="AI Analysis" icon="pi pi-robot" (onClick)="analyzeAI()" [disabled]="!customPrompt()" />
               </div>
-
-              <!-- Success Result -->
-              @if (result()) {
-              <div class="success-container">
-                <i class="pi pi-check-circle success-icon"></i>
-                <h2 class="section-title">Import Complete!</h2>
-                <p class="subtitle">
-                  Your GitHub data has been successfully imported
-                </p>
-
-                <div class="result-details">
-                  <h3>Import Details</h3>
-                  <pre>{{ result() | json }}</pre>
-                </div>
-
-                <div class="step-actions">
-                  <p-button label="Start Over" severity="secondary" [outlined]="true" (onClick)="startOver()" />
-                  <p-button label="View Dashboard" icon="pi pi-chart-line" />
-                </div>
-              </div>
-              }
             </div>
           </ng-template>
         </p-step-panel>
@@ -195,31 +191,4 @@
       </p-step-panels>
     </p-stepper>
   </div>
-
-  <!-- Side Panel -->
-  <aside class="side-panel">
-    <div class="side-card github-card">
-      <div class="side-card-header">
-        <i class="pi pi-github"></i> GitHub Connected
-      </div>
-      <div class="side-card-body github-connected">
-        @if (user(); as u) {
-        <img class="gh-avatar-img" [src]="u.avatarUrl" [alt]="u.login" />
-        <div class="gh-info">
-          <div class="gh-user">{{ u.login }}</div>
-        </div>
-        <div class="gh-actions">
-          <p-button label="Profile" [text]="true" size="small" />
-          <p-button label="Update" [text]="true" size="small" />
-        </div>
-        } @else {
-        <div class="gh-avatar">GH</div>
-        <div class="gh-info">
-          <div class="gh-user">Not connected</div>
-        </div>
-        }
-      </div>
-    </div>
-  </aside>
-
 </div>

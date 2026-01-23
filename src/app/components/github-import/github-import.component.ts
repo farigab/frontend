@@ -1,4 +1,3 @@
-import { JsonPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, inject, OnInit, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MessageService } from 'primeng/api';
@@ -6,6 +5,7 @@ import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
 import { DatePickerModule } from 'primeng/datepicker';
 import { InputTextModule } from 'primeng/inputtext';
+import { SelectModule } from 'primeng/select';
 import { StepperModule } from 'primeng/stepper';
 import { ToastModule } from 'primeng/toast';
 import { AuthService } from '../../services/auth.service';
@@ -19,19 +19,38 @@ interface LoadingState {
   import: boolean;
 }
 
+interface PresetOption {
+  label: string;
+  value: Preset;
+}
+
+type Preset =
+  | 'today'
+  | 'yesterday'
+  | 'thisWeek'
+  | 'lastWeek'
+  | 'last2Weeks'
+  | 'thisMonth'
+  | 'lastMonth'
+  | 'last3Months'
+  | 'last6Months'
+  | 'thisYear'
+  | 'lastYear';
+
+
 type LoadingKey = keyof LoadingState;
 
 @Component({
   selector: 'app-github-import',
   imports: [
     FormsModule,
-    JsonPipe,
     ButtonModule,
     CardModule,
     InputTextModule,
     DatePickerModule,
     ToastModule,
-    StepperModule
+    StepperModule,
+    SelectModule
   ],
   providers: [MessageService],
   templateUrl: './github-import.component.html',
@@ -66,6 +85,10 @@ export class GithubImportComponent implements OnInit {
   readonly isImporting = computed(() => this.loading().import);
   readonly user = this.authService.user;
 
+  readonly customPrompt = signal('');
+  readonly maxPromptLength = 1000;
+  readonly promptLength = computed(() => this.customPrompt().length);
+
   private signalActiveStep = signal<number>(1);
 
   get activeStep(): number {
@@ -78,6 +101,28 @@ export class GithubImportComponent implements OnInit {
 
   ngOnInit(): void {
     this.checkForSavedToken();
+  }
+
+  analyzeAI(): void {
+    const prompt = this.customPrompt().trim();
+    if (!prompt || prompt.length === 0) {
+      this.showError('Please enter a prompt for AI analysis');
+      return;
+    }
+
+    if (prompt.length > this.maxPromptLength) {
+      this.showError(`Prompt exceeds maximum length of ${this.maxPromptLength} characters`);
+      return;
+    }
+
+    this.messageService.add({
+      severity: 'info',
+      summary: 'AI Analysis',
+      detail: 'Analyzing...'
+    });
+
+    this.result.set({ aiPrompt: prompt, analysis: 'Simulated AI analysis result' });
+    this.showSuccess('AI analysis complete');
   }
 
   saveToken(): void {
@@ -230,4 +275,119 @@ export class GithubImportComponent implements OnInit {
       life: 5000
     });
   }
+
+  selectedPreset = signal<string | null>(null);
+  presetOptions: PresetOption[] = [
+    { label: 'Today', value: 'today' },
+    { label: 'Yesterday', value: 'yesterday' },
+    { label: 'This Week', value: 'thisWeek' },
+    { label: 'Last Week', value: 'lastWeek' },
+    { label: 'Last 2 Weeks', value: 'last2Weeks' },
+    { label: 'This Month', value: 'thisMonth' },
+    { label: 'Last Month', value: 'lastMonth' },
+    { label: 'Last 3 Months', value: 'last3Months' },
+    { label: 'Last 6 Months', value: 'last6Months' },
+    { label: 'This Year', value: 'thisYear' },
+    { label: 'Last Year', value: 'lastYear' }
+  ];
+
+  selectPreset(preset: Preset): void {
+    this.selectedPreset.set(preset);
+
+    const range = this.presetMap[preset]?.();
+
+    if (!range) {
+      this.startDate.set(null);
+      this.endDate.set(null);
+      return;
+    }
+
+    this.startDate.set(range.start);
+    this.endDate.set(range.end);
+  }
+
+
+  private readonly presetMap: Record<Preset, () => { start: Date; end: Date }> = {
+    today: () => {
+      const d = this.today();
+      return { start: d, end: d };
+    },
+
+    yesterday: () => {
+      const d = this.today();
+      d.setDate(d.getDate() - 1);
+      return { start: d, end: d };
+    },
+
+    thisWeek: () => {
+      const end = this.today();
+      return { start: this.startOfWeek(end), end };
+    },
+
+    lastWeek: () => {
+      const end = this.startOfWeek(this.today());
+      end.setDate(end.getDate() - 1);
+      const start = this.startOfWeek(end);
+      return { start, end };
+    },
+
+    last2Weeks: () => {
+      const end = this.today();
+      const start = new Date(end);
+      start.setDate(start.getDate() - 13);
+      return { start, end };
+    },
+
+    thisMonth: () => {
+      const end = this.today();
+      return { start: new Date(end.getFullYear(), end.getMonth(), 1), end };
+    },
+
+    lastMonth: () => {
+      const end = new Date(this.today().getFullYear(), this.today().getMonth(), 0);
+      const start = new Date(end.getFullYear(), end.getMonth(), 1);
+      return { start, end };
+    },
+
+    last3Months: () => {
+      const end = this.today();
+      return { start: new Date(end.getFullYear(), end.getMonth() - 3, 1), end };
+    },
+
+    last6Months: () => {
+      const end = this.today();
+      return { start: new Date(end.getFullYear(), end.getMonth() - 6, 1), end };
+    },
+
+    thisYear: () => {
+      const end = this.today();
+      return { start: new Date(end.getFullYear(), 0, 1), end };
+    },
+
+    lastYear: () => {
+      const year = this.today().getFullYear() - 1;
+      return {
+        start: new Date(year, 0, 1),
+        end: new Date(year, 11, 31)
+      };
+    }
+  };
+
+
+  private today(): Date {
+    const d = new Date();
+    return new Date(d.getFullYear(), d.getMonth(), d.getDate());
+  }
+
+  private startOfWeek(date: Date): Date {
+    const d = new Date(date);
+    const diff = d.getDay() === 0 ? 6 : d.getDay() - 1;
+    d.setDate(d.getDate() - diff);
+    return this.todayFrom(d);
+  }
+
+  private todayFrom(d: Date): Date {
+    return new Date(d.getFullYear(), d.getMonth(), d.getDate());
+  }
+
 }
