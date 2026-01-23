@@ -1,4 +1,4 @@
 export const environment = {
   production: true,
-  apiUrl: 'https://farigab.com/api'
+  apiUrl: 'https://api-bragdoc.farigab.com/api'
 };
