@@ -159,12 +159,13 @@ export class GithubImportComponent implements OnInit {
 
     const range = this.presetMap[preset]();
     const selectedRepos = Array.from(this.selectedRepos());
+    const repos = selectedRepos.length > 0 ? selectedRepos : this.repositories();
 
     const request: AICustomSummaryRequest = {
       startDate: this.formatDate(range.start),
       endDate: this.formatDate(range.end),
       userPrompt: prompt,
-      repositories: selectedRepos
+      repositories: repos
     };
 
     this.messageService.add({
