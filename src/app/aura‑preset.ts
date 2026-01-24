@@ -23,43 +23,16 @@ export const CustomAuraPreset = definePreset(Aura, {
           contrastColor: '#ffffff',
           hoverColor: '{primary.600}',
           activeColor: '{primary.700}'
-        },
-        highlight: {
-          background: '{primary.50}',
-          focusBackground: '{primary.100}',
-          color: '{primary.700}',
-          focusColor: '{primary.800}'
         }
       },
       dark: {
         primary: {
-          color: '{primary.400}',
-          contrastColor: '{surface.900}',
-          hoverColor: '{primary.300}',
-          activeColor: '{primary.200}'
-        },
-        highlight: {
-          background: 'color-mix(in srgb, {primary.400}, transparent 84%)',
-          focusBackground: 'color-mix(in srgb, {primary.400}, transparent 76%)',
-          color: 'rgba(255,255,255,.87)',
-          focusColor: 'rgba(255,255,255,.87)'
+          color: '{primary.500}',
+          contrastColor: '#ffffff',
+          hoverColor: '{primary.600}',
+          activeColor: '{primary.700}'
         }
       }
-    }
-  },
-  primitive: {
-    purple: {
-      50: '#F5F3FF',
-      100: '#EDE9FE',
-      200: '#DDD6FE',
-      300: '#C4B5FD',
-      400: '#A78BFA',
-      500: '#6B5DD3',
-      600: '#7B69E0',
-      700: '#5B4DC0',
-      800: '#4C3FA8',
-      900: '#3D3289',
-      950: '#2E256A'
     }
   },
   components: {
