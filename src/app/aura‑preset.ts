@@ -55,6 +55,22 @@ export const CustomAuraPreset = definePreset(Aura, {
           }
         }
       }
+    },
+    inputtext: {
+      colorScheme: {
+        light: {
+          root: {
+            color: '{surface.700}',
+            placeholderColor: '{surface.400}'
+          }
+        },
+        dark: {
+          root: {
+            color: '{surface.500}',
+            placeholderColor: '{surface.500}'
+          }
+        }
+      }
     }
   }
 });

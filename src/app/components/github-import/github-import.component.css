@@ -314,7 +314,6 @@
   padding: clamp(10px, 2vw, 14px);
   border-radius: 8px;
   background: rgba(32, 28, 46, 0.95);
-  color: var(--text-primary);
   border: 1px solid var(--border);
   font-size: clamp(0.875rem, 2vw, 1rem);
   line-height: 1.6;
@@ -326,7 +325,7 @@
 
 .form-row input::placeholder,
 #token-input::placeholder {
-  color: rgba(224, 218, 255, 0.38);
+  color: var(--placeholder-color);
 }
 
 .form-row input:focus,
