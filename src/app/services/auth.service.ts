@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable, signal } from '@angular/core';
 import { Router } from '@angular/router';
-import { catchError, map, Observable, of, tap } from 'rxjs';
+import { catchError, map, Observable, of, tap, shareReplay } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { LoggingService } from './logging.service';
 import { NotificationService } from './notification.service';
@@ -24,7 +24,8 @@ export class AuthService {
   private readonly notify = inject(NotificationService);
   private readonly http = inject(HttpClient);
 
-  private refreshInProgress = signal<boolean>(false);
+  // Cache da requisição - mantido até logout ou erro
+  private userRequest$?: Observable<AuthUser>;
 
   loginWithGithub(): void {
     const redirect = `${location.origin}/auth-callback`;
@@ -44,70 +45,75 @@ export class AuthService {
       .post(`${environment.apiUrl}/auth/logout`, {})
       .subscribe({
         next: () => {
-          this.user.set(null);
+          this.clearUserState();
           this.router.navigate(['/login']);
         },
         error: (err) => {
           this.logger.error('Erro no logout', { err });
           this.notify.error('Erro no logout', String((err as any)?.message ?? err));
-          this.user.set(null);
+          this.clearUserState();
           this.router.navigate(['/login']);
         }
       });
   }
 
-  loadUser(): void {
-    this.http.get<AuthUser>(`${environment.apiUrl}/user`)
-      .subscribe(user => {
-        this.user.set(user);
-      });
+  loadUser(): Observable<AuthUser> {
+    // Se já existe cache, retorna ele (evita duplicação)
+    if (this.userRequest$) {
+      return this.userRequest$;
+    }
+
+    this.userRequest$ = this.http
+      .get<AuthUser>(`${environment.apiUrl}/user`)
+      .pipe(
+        tap(user => {
+          this.user.set(user);
+        }),
+        catchError(error => {
+          console.error('Erro ao carregar usuário:', error.status);
+          // Limpa cache apenas em caso de erro
+          this.userRequest$ = undefined;
+          throw error;
+        }),
+        shareReplay({ bufferSize: 1, refCount: false })
+      );
+
+    return this.userRequest$;
+  }
+
+  /**
+   * Força recarregamento do usuário (limpa cache).
+   */
+  reloadUser(): Observable<AuthUser> {
+    console.log('🔄 Forçando recarga do usuário');
+    this.userRequest$ = undefined;
+    return this.loadUser();
   }
 
   checkSession(): Observable<boolean> {
+    // Se já tem usuário carregado, retorna true imediatamente (sem requisição)
     if (this.user()) {
       return of(true);
     }
 
-    return this.http
-      .get<AuthUser>(`${environment.apiUrl}/user`, { withCredentials: true })
-      .pipe(
-        tap(user => this.user.set(user)),
-        map(() => true),
-        catchError(() => of(false))
-      );
+    // Caso contrário, tenta carregar usando loadUser() (reutiliza cache se houver)
+    return this.loadUser().pipe(
+      map(() => {
+        return true;
+      }),
+      catchError(error => {
+        console.log('Sessão inválida:', error.status);
+        this.clearUserState();
+        return of(false);
+      })
+    );
   }
 
   /**
-   * Solicita um novo token JWT usando o refresh token
+   * Limpa o estado do usuário e cache de requisições.
    */
-  refreshToken(): Observable<boolean> {
-    if (this.refreshInProgress()) {
-      return of(false);
-    }
-
-    this.refreshInProgress.set(true);
-
-    return this.http
-      .post(`${environment.apiUrl}/auth/refresh`, {}, { withCredentials: true })
-      .pipe(
-        map(() => {
-          this.refreshInProgress.set(false);
-          return true;
-        }),
-        catchError((err) => {
-          this.refreshInProgress.set(false);
-          this.logger.error('Erro ao renovar token', { err });
-
-          // Se o refresh falhar, desloga o usuário
-          this.user.set(null);
-          this.router.navigate(['/login']);
-
-          return of(false);
-        })
-      );
-  }
-
-  isRefreshInProgress(): boolean {
-    return this.refreshInProgress();
+  private clearUserState(): void {
+    this.user.set(null);
+    this.userRequest$ = undefined;
   }
 }
