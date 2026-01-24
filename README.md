@@ -1,242 +1,227 @@
-# BragDoc Frontend
+# BragDoc - Rastreador de Conquistas Profissionais
 
-Frontend web do BragDoc: aplicação Angular para gerenciar e visualizar conquistas profissionais e relatórios.
+Rastreie e mostre suas conquistas profissionais com insights alimentados por IA a partir de suas contribuições no GitHub.
 
-## 🚀 Tecnologias (versões atuais)
+## 🚀 Funcionalidades
 
-- **Angular 21.1.0** — Standalone components e recursos modernos
-- **PrimeNG 21.0.4** — Biblioteca de componentes UI
-- **TypeScript 5.9.2** — Tipagem rígida
-- **Chart.js 4.4.0** — Visualização de dados
-- **PrimeFlex** — Utilitários Flexbox
-- **PrimeIcons 7.0.0** — Ícones
+- 🔐 **Autenticação OAuth do GitHub** - Login seguro com sua conta GitHub
+- 📊 **Integração com GitHub** - Importe commits, pull requests e issues automaticamente
+- 🤖 **Análise Alimentada por IA** - Gere resumos inteligentes do seu trabalho com prompts personalizados
+- 📅 **Períodos de Tempo Flexíveis** - Analise conquistas por dia, semana, mês ou intervalos personalizados
+- 📈 **Relatórios Visuais** - Gráficos e insights bonitos sobre suas contribuições
+- 🎨 **Interface Moderna** - Design limpo e responsivo com tema escuro
 
-## ✨ Recursos principais
+## 🛠️ Stack Tecnológico
 
-- Apple-inspired UI com foco em clareza e tipografia
-- Componentes standalone e arquitetura moderna
-- Gerenciamento reativo por sinais (`signal`, `computed`)
-- Lazy loading de rotas para otimização de bundling
-- Formulários reativos tipados
-- Acessibilidade e responsividade (WCAG AA)
+### Frontend
+- **Angular 21** - Componentes standalone com signals
+- **TypeScript** - Verificação de tipos rigorosa
+- **PrimeNG** - Biblioteca de componentes UI
+- **RxJS** - Programação reativa
+- **Vite** - Ferramenta de build rápida
 
-## 📁 Estrutura resumida
+### Melhores Práticas
+- ✅ Componentes standalone (sem NgModules)
+- ✅ Signals para gerenciamento de estado
+- ✅ Detecção de mudanças OnPush
+- ✅ Lazy loading de rotas
+- ✅ Guards e interceptors funcionais
+- ✅ `provideAppInitializer` moderno (sem APIs depreciadas)
+- ✅ Função `inject()` ao invés de injeção via construtor
+- ✅ Formulários reativos
+- ✅ Conformidade com acessibilidade WCAG AA
 
+## 📋 Pré-requisitos
+
+- Node.js 21+ e npm
+- Angular CLI 21+
+- API backend rodando (veja o repositório backend)
+
+## 🚀 Começando
+
+### 1. Clone o repositório
+
+```bash
+git clone <url-do-repositório>
+cd bragdoc-frontend
 ```
-src/
-├── app/
-│   ├── components/
-│   ├── models/
-│   ├── services/
-│   ├── app.component.ts
-│   └── app.routes.ts
-├── environments/
-├── styles.css
-├── main.ts
-└── index.html
-```
 
-## 🛠️ Desenvolvimento
-
-### Pré-requisitos
-
-- Node.js 18+ (recomendado)
-- npm (ou pnpm)
-
-### Instalação
+### 2. Instale as dependências
 
 ```bash
 npm install
 ```
 
-### Executar em desenvolvimento
+### 3. Configure o ambiente
+
+Crie ou atualize `src/environments/environment.ts`:
+
+```typescript
+export const environment = {
+  production: false,
+  apiUrl: 'http://localhost:8080/api'
+};
+```
+
+Para produção, atualize `src/environments/environment.prod.ts`:
+
+```typescript
+export const environment = {
+  production: true,
+  apiUrl: 'https://seu-dominio-api.com/api'
+};
+```
+
+### 4. Execute o servidor de desenvolvimento
 
 ```bash
 npm start
 ```
 
-Abra http://localhost:4200/ (ou conforme configuração do projeto).
+Navegue para `http://localhost:4200/`
 
-### Build de produção
+### 5. Build para produção
 
 ```bash
 npm run build
 ```
 
-### Scripts comuns
+Os artefatos de build serão armazenados no diretório `dist/`.
+
+## 📁 Estrutura do Projeto
+
+```
+src/
+├── app/
+│   ├── components/
+│   │   ├── github-import/     # Assistente de integração GitHub
+│   │   ├── layout/            # Wrapper do layout principal
+│   │   ├── login/             # Páginas de autenticação
+│   │   └── reports/           # Relatórios e análises
+│   ├── guards/
+│   │   └── auth.guard.ts      # Proteção de rotas
+│   ├── interceptors/
+│   │   └── auth.interceptor.ts # Interceptor HTTP de autenticação
+│   ├── models/                # Interfaces TypeScript
+│   ├── pipes/
+│   │   └── markdown.pipe.ts   # Renderização de Markdown
+│   ├── services/              # Lógica de negócios
+│   ├── app.component.ts       # Componente raiz
+│   ├── app.config.ts          # Configuração da aplicação
+│   └── app.routes.ts          # Definições de rotas
+├── assets/                    # Arquivos estáticos
+├── environments/              # Configurações de ambiente
+└── styles.css                 # Estilos globais
+```
+
+## 🔑 Componentes Principais
+
+### Fluxo de Autenticação
+
+1. Usuário clica em "Login com GitHub"
+2. Redirecionado para OAuth do GitHub
+3. Callback tratado pelo `AuthCallbackComponent`
+4. Sessão validada via `provideAppInitializer`
+5. Dados do usuário cacheados no `AuthService`
+
+### Assistente de Importação do GitHub
+
+**Processo de 4 Etapas:**
+
+1. **Conectar** - Inserir Token de Acesso Pessoal do GitHub
+2. **Repositórios** - Selecionar repositórios para analisar
+3. **Período de Tempo** - Escolher intervalo de datas (predefinidos ou personalizado)
+4. **Análise IA** - Personalizar prompt e gerar insights
+
+### Gerenciamento de Estado
+
+- **Signals** para estado local reativo
+- **Computed signals** para estado derivado
+- **RxJS** para operações assíncronas
+- **Interceptor HTTP** para gerenciamento de sessão
+
+## 🎨 Sistema de Design
+
+Sistema de design personalizado baseado em propriedades customizadas CSS:
+
+```css
+:root {
+  --primary: #6B5DD3;
+  --bg: #1C1B29;
+  --surface: #2A273D;
+  --text-primary: #E0DAFF;
+  /* ... */
+}
+```
+
+### Escala de Espaçamento (Base 8px)
+- `--spacing-xs: 4px`
+- `--spacing-sm: 8px`
+- `--spacing-md: 16px`
+- `--spacing-lg: 24px`
+- `--spacing-xl: 32px`
+
+## 🧪 Testes
 
 ```bash
-npm start          # servidor de desenvolvimento
-npm run build      # build de produção
-npm run watch      # build em modo watch
-npm test           # executar testes (jest/vitest)
-npm test:watch     # testes em watch
+# Executar testes unitários
+npm test
+
+# Executar testes e2e
+npm run e2e
 ```
 
-## 🔧 Configuração
+## 🔒 Segurança
 
-Atualize a URL da API em `src/environments/environment.ts`:
+- **Cookies HttpOnly** para gerenciamento de sessão
+- **Proteção CSRF** via backend
+- **Fluxo OAuth seguro** com parâmetro state
+- **Proteção XSS** via DOMPurify (sanitização de markdown)
+- **Sem localStorage** para dados sensíveis
 
-```typescript
-export const environment = {
-  production: true,
-  apiUrl: 'http://localhost:8080/api'
-};
-```
+## 🌐 Suporte de Navegadores
 
-## 🤝 Contribuições
+- Chrome/Edge (últimas 2 versões)
+- Firefox (últimas 2 versões)
+- Safari (últimas 2 versões)
 
-- Crie uma branch `feature/descricao` ou `fix/descricao`.
-- Abra um PR descrevendo mudanças e como testar.
-- Siga as diretrizes do projeto (componentes standalone, sinais, OnPush, TypeScript estrito, acessibilidade).
+## 📝 Variáveis de Ambiente
+
+| Variável | Descrição | Padrão |
+|----------|-----------|--------|
+| `apiUrl` | URL da API backend | `http://localhost:8080/api` |
+
+## 🤝 Contribuindo
+
+1. Faça um fork do repositório
+2. Crie uma branch de feature (`git checkout -b feature/funcionalidade-incrivel`)
+3. Siga o guia de estilo do Angular e as convenções do projeto
+4. Garanta que todos os testes passem
+5. Commit suas mudanças (`git commit -m 'Adiciona funcionalidade incrível'`)
+6. Push para a branch (`git push origin feature/funcionalidade-incrivel`)
+7. Abra um Pull Request
+
+### Estilo de Código
+
+- Use `prettier` para formatação
+- Siga as convenções de nomenclatura do Angular
+- Escreva mensagens de commit significativas
+- Adicione comentários JSDoc para APIs públicas
 
 ## 📄 Licença
 
-Projeto privado
+Este projeto está licenciado sob a Licença MIT - veja o arquivo LICENSE para detalhes.
 
-## 🎨 Design System — Dark Mode (Roxo)
+## 👤 Autor
 
-Seguem as diretrizes oficiais do Design System do projeto para o modo escuro. Esta paleta e regras devem ser seguidas rigidamente para garantir consistência visual e acessibilidade.
+**farigab**
 
-### Tokens de cores (core)
+## 🙏 Agradecimentos
 
-- `--primary`: #6B5DD3        — Roxo principal
-- `--primary-hover`: #7B69E0  — Hover roxo
-- `--bg`: #1C1B29             — Fundo escuro
-- `--surface`: #2A273D        — Superfícies / cards
-- `--border`: #443F5E         — Bordas suaves
-
-### Texto
-
-- `--text-primary`: #E0DAFF   — Texto principal (roxo claro)
-- `--text-secondary`: #BFB3F2 — Texto secundário
-- `--text-disabled`: #7F6FD1  — Texto desabilitado
-
-### Estados
-
-- `--success`: #9BFFA1
-- `--warning`: #FFD37F
-- `--error`: #FF9BFF
-
-> Regra: roxo é a base para a identidade visual; não usar cores fora da paleta.
-
-### Tipografia
-
-- Família: `system-ui, -apple-system, BlinkMacSystemFont`
-- Escala recomendada:
-  - Title: 32px / 600
-  - Section: 24px / 600
-  - Subtitle: 20px / 500
-  - Body: 16px / 400
-  - Caption: 13px / 400
-
-Line-height mínimo: 1.5
-
-### Espaçamento
-
-- Base: 8px — usar múltiplos de 8 para margens e gaps
-- Layout: 24–32px
-- Padding de cards: 24px
-
-### PrimeNG — Overrides obrigatórios
-
-- Botões (`p-button`):
-  - `border-radius: 10px`, altura 40px
-  - Primary: `background: var(--primary)`, `color: #fff`
-  - Secondary: `background: var(--surface)`, `border: 1px solid var(--border)`, `color: var(--text-primary)`
-  - Hover: `background: var(--primary-hover)`
-
-- Inputs (`p-inputtext`, `p-dropdown`, `p-calendar`):
-  - Altura 40px, `border: 1px solid var(--border)`, `border-radius: 8px`, `background: var(--surface)`, `color: var(--text-primary)`
-  - Focus: `border-color: var(--primary)`, `box-shadow: 0 0 6px rgba(107,93,211,0.3)`
-
-- Cards (`p-card`):
-  - `border-radius: 12px`, `padding: 24px`, `background: var(--surface)`, `box-shadow: 0 4px 12px rgba(107,93,211,0.3)`
-
-- Tables (`p-table`):
-  - Header transparente, hover suave: `rgba(107,93,211,0.05)`
-
-### UX Rules
-
-- Sempre mostrar estado vazio
-- Feedback visual em ações (sucesso/erro)
-- Hover e focus visíveis
-- Animações curtas (<200ms)
-- Evitar loaders agressivos
-- Garantir contraste mínimo WCAG 4.5:1
-
-### Proibições
-
-- ❌ Cores fora da paleta roxa
-- ❌ Gradientes exagerados
-- ❌ Ícones coloridos decorativos
-- ❌ Componentes densos ou ruidosos
-
-### Regra da fonte (autoridade)
-
-Este arquivo define o design completo para o Dark Mode Roxo. Não criar variações fora dessa paleta; seguir tokens, espaçamento e overrides PrimeNG.
+- PrimeNG pelos componentes UI incríveis
+- Time do Angular pelo framework fantástico
+- GitHub pelo acesso OAuth e API
 
 ---
 
-
-## 📦 Key Components
-
-### Dashboard
-
-- Overview statistics cards
-- Category distribution chart
-- Recent achievements list
-- Quick action buttons
-
-### Achievement List
-
-- Data table with sorting and filtering
-- Search functionality
-- Category filtering
-- CRUD operations with confirmations
-
-### Achievement Form
-
-- Reactive form validation
-- Date picker
-- Category dropdown
-
-### Layout
-
-- Sticky header with blur effect
-- Responsive navigation
-- Mobile sidebar
-- Apple-style footer
-
-## 🔧 Scripts
-
-```bash
-npm start          # Start development server
-npm run build      # Production build
-npm run watch      # Build in watch mode
-npm test           # Run tests
-npm test:watch     # Run tests in watch mode
-```
-
-## 📝 Environment Variables
-
-- `apiUrl`: Backend API URL (default: `http://localhost:8080/api`)
-
-## 🤝 Contributing
-
-Follow the coding standards defined in `.github/instructions/frontend.md`:
-
-1. Use standalone components
-2. Use signals for state management
-3. Implement OnPush change detection
-4. Follow strict TypeScript practices
-5. Ensure WCAG AA accessibility
-6. Keep components small and focused
-
-## 📄 License
-
-Private project
-
----
-
-**Built with ❤️ using Angular 21 and PrimeNG**
+**Built with ❤️ using Angular 21**
