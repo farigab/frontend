@@ -96,7 +96,7 @@
 
 @media (min-width: 768px) {
   .import-container {
-    padding: var(--spacing-xl);
+    padding: var(--spacing-md);
   }
 }
 
