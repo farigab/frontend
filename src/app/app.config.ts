@@ -5,13 +5,12 @@ import { MessageService } from 'primeng/api';
 import { providePrimeNG } from 'primeng/config';
 import './polyfills';
 
-import { catchError, filter, of, switchMap } from 'rxjs';
+import { catchError, of } from 'rxjs';
 import { routes } from './app.routes';
 import { CustomAuraPreset } from './aura‑preset';
 import { authInterceptor } from './interceptors/auth.interceptor';
 import { errorInterceptor } from './interceptors/error.interceptor';
 import { AuthService } from './services/auth.service';
-import { BackendHealthService } from './services/backend-health.service';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -35,13 +34,10 @@ export const appConfig: ApplicationConfig = {
         preset: CustomAuraPreset,
       }
     }),
-    provideAppInitializer(() => {
-      const healthService = inject(BackendHealthService);
-      const authService = inject(AuthService);
 
-      return healthService.checkHealth().pipe(
-        filter(() => healthService.status().isAvailable),
-        switchMap(() => authService.checkSession()),
+    provideAppInitializer(() => {
+      const authService = inject(AuthService);
+      return authService.checkSession().pipe(
         catchError(() => of(false))
       );
     }),
