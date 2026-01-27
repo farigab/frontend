@@ -50,14 +50,26 @@ export class BackendHealthService {
 
     return this.quickPing().pipe(
       switchMap((isHibernating) => {
-        if (isHibernating) {
-          console.log('[Health Check] Backend hibernating - initiating warm-up sequence');
+        // Se o quickPing respondeu rápido (não está hibernando), já marca como disponível
+        if (!isHibernating) {
+          console.log('[Health Check] Backend available (quick ping succeeded)');
           this.updateStatus({
-            isWarming: true,
+            isAvailable: true,
+            isWarming: false,
+            lastCheck: new Date(),
             failedAttempts: 0,
-            estimatedWaitTime: 60
+            estimatedWaitTime: undefined,
+            lastError: undefined
           });
+          return of(void 0);
         }
+
+        console.log('[Health Check] Backend hibernating - initiating warm-up sequence');
+        this.updateStatus({
+          isWarming: true,
+          failedAttempts: 0,
+          estimatedWaitTime: 60
+        });
         return this.attemptHealthCheck(0);
       }),
       catchError((error) => {

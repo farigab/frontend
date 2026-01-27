@@ -36,7 +36,7 @@ interface ReportTypeOption {
     ProgressSpinnerModule,
     MarkdownPipe
   ],
-  providers: [MessageService, GithubImportFacade],
+  providers: [GithubImportFacade],
   templateUrl: './github-import.component.html',
   styleUrls: ['./github-import.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,

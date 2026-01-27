@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, OnInit } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { switchMap, catchError, of } from 'rxjs';
 import { BackendHealthService } from './services/backend-health.service';
@@ -9,7 +9,7 @@ import { BackendLoadingComponent } from './components/backend-loading/backend-lo
   selector: 'app-root',
   imports: [RouterOutlet, BackendLoadingComponent],
   template: `
-    @if (!healthService.status().isAvailable) {
+    @if (showLoading()) {
       <app-backend-loading />
     }
 
@@ -23,6 +23,11 @@ export class AppComponent implements OnInit {
   protected readonly healthService = inject(BackendHealthService);
   private readonly authService = inject(AuthService);
 
+  readonly showLoading = computed(() => {
+    const status = this.healthService.status();
+    return !status.isAvailable && (status.isWarming || status.failedAttempts > 0);
+  });
+
   ngOnInit(): void {
     this.healthService.checkHealth().pipe(
       switchMap(() => {
@@ -32,12 +37,17 @@ export class AppComponent implements OnInit {
         return of(false);
       }),
       catchError((error) => {
+        console.error('[App] Initialization error:', error);
         return of(false);
       })
     ).subscribe({
-      next: () => {
+      next: (isAuthenticated) => {
+        if (isAuthenticated) {
+          console.log('[App] User authenticated');
+        }
       },
-      error: () => {
+      error: (error) => {
+        console.error('[App] Critical error during initialization:', error);
       }
     });
   }
