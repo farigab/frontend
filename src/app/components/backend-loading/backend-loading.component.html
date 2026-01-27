@@ -9,12 +9,18 @@
         <p-progressSpinner styleClass="custom-spinner" strokeWidth="3" [style]="{'width': '80px', 'height': '80px'}" />
       </div>
 
-      @if (healthService.status().isWarming) {
       <div class="status-messages">
-        <h2 class="status-title">Warming up backend</h2>
+        <h2 class="status-title">{{ statusMessage() }}</h2>
+
+        @if (healthService.status().isWarming) {
         <p class="status-description">
-          The backend service is starting up from hibernation.<br />
-          This may take up to 60 seconds...
+          The backend service is starting up from hibernation.
+
+          @if (estimatedWaitTime(); as waitTime) {
+          <br /><strong>Estimated wait time: ~{{ waitTime }} seconds</strong>
+          } @else {
+          <br />This may take up to 60 seconds...
+          }
         </p>
 
         <div class="progress-info">
@@ -25,23 +31,58 @@
             <div class="progress-fill" [style.width.%]="progressPercentage()"></div>
           </div>
         </div>
+
+        @if (showFreeTierNotice()) {
+        <div class="info-notice">
+          <i class="pi pi-info-circle"></i>
+          <p>
+            <strong>Why is this taking so long?</strong>
+            The backend is hosted on a free tier that hibernates after 15 minutes of inactivity.
+            Cold starts can take 30-90 seconds. Subsequent visits will be instant! ⚡
+          </p>
+        </div>
+        }
+        } @else {
+        <p class="status-description">
+          Connecting to server...
+        </p>
+        }
       </div>
-      } @else {
-      <div class="status-messages">
-        <h2 class="status-title">Connecting to server</h2>
-        <p class="status-description">Please wait...</p>
+
+      @if (healthService.hasFailed()) {
+      <div class="error-state" role="alert">
+        <i class="pi pi-exclamation-triangle error-icon" aria-hidden="true"></i>
+        <h3 class="error-title">Connection Failed</h3>
+        <p class="error-description">
+          Unable to connect to the backend service after {{ maxAttempts }} attempts.
+          @if (healthService.status().lastError) {
+          <br /><strong>Error: {{ healthService.status().lastError }}</strong>
+          }
+          <br />Please check your internet connection and try again.
+        </p>
+        <p-button 
+          label="Retry Connection" 
+          icon="pi pi-refresh" 
+          (onClick)="retry()" 
+          styleClass="retry-button"
+          [attr.aria-label]="'Retry connection to backend service'" />
       </div>
       }
 
-      @if (healthService.status().failedAttempts >= maxAttempts && !healthService.status().isAvailable) {
-      <div class="error-state">
-        <i class="pi pi-exclamation-triangle error-icon"></i>
-        <h3 class="error-title">Connection Failed</h3>
-        <p class="error-description">
-          Unable to connect to the backend service.<br />
-          Please try again in a few moments.
+      @if (showWarning()) {
+      <div class="warning-notice" role="alert">
+        <p>
+          <strong>⚠️ Backend is taking longer than usual.</strong> You can:
         </p>
-        <p-button label="Retry Connection" icon="pi pi-refresh" (onClick)="retry()" styleClass="retry-button" />
+        <ul>
+          <li>Wait a bit more (it should connect soon)</li>
+          <li>Check backend status at
+            <a href="https://api-bragdoc.farigab.com/api/health" target="_blank" rel="noopener noreferrer">
+              api-bragdoc.farigab.com/api/health
+            </a>
+          </li>
+          <li>Try refreshing the page</li>
+        </ul>
       </div>
       }
     </div>

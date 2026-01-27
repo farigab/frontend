@@ -41,10 +41,12 @@
   0%,
   100% {
     opacity: 0.9;
+    transform: scale(1);
   }
 
   50% {
     opacity: 1;
+    transform: scale(1.02);
   }
 }
 
@@ -193,5 +195,133 @@
 
   .status-description {
     font-size: 0.875rem;
+  }
+}
+
+
+.info-notice {
+  display: flex;
+  gap: var(--spacing-md);
+  padding: var(--spacing-md);
+  background: rgba(107, 93, 211, 0.08);
+  border-radius: var(--radius-md);
+  border: 1px solid rgba(107, 93, 211, 0.2);
+  margin-top: var(--spacing-lg);
+  align-items: flex-start;
+}
+
+.info-notice i {
+  font-size: 1.25rem;
+  color: var(--primary);
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.info-notice p {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  margin: 0;
+  line-height: 1.6;
+}
+
+.info-notice strong {
+  color: var(--text-primary);
+  display: block;
+  margin-bottom: var(--spacing-xs);
+}
+
+.warning-notice {
+  padding: var(--spacing-md);
+  background: rgba(255, 211, 127, 0.08);
+  border-radius: var(--radius-md);
+  border: 1px solid rgba(255, 211, 127, 0.2);
+  margin-top: var(--spacing-lg);
+}
+
+.warning-notice p {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  margin: 0 0 var(--spacing-sm) 0;
+}
+
+.warning-notice p strong {
+  color: var(--text-primary);
+  display: block;
+  margin-bottom: var(--spacing-xs);
+}
+
+.warning-notice ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
+}
+
+.warning-notice li {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  padding-left: var(--spacing-lg);
+  position: relative;
+}
+
+.warning-notice li::before {
+  content: "•";
+  position: absolute;
+  left: var(--spacing-sm);
+  color: var(--warning);
+  font-weight: bold;
+}
+
+.warning-notice a {
+  color: var(--primary);
+  text-decoration: none;
+  font-weight: var(--font-weight-medium);
+  transition: color var(--transition-fast);
+  word-break: break-all;
+}
+
+.warning-notice a:hover {
+  color: var(--primary-hover);
+  text-decoration: underline;
+}
+
+/* Animação para o tempo estimado */
+.status-description strong {
+  display: inline-block;
+  color: var(--primary);
+  font-weight: var(--font-weight-semibold);
+}
+
+/* Melhoria na progress bar */
+.progress-bar {
+  position: relative;
+  overflow: hidden;
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.progress-fill {
+  position: relative;
+}
+
+.progress-fill::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 30px;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3));
+  animation: shimmer-move 1.5s infinite;
+}
+
+@keyframes shimmer-move {
+  0% {
+    transform: translateX(-100%);
+  }
+
+  100% {
+    transform: translateX(100%);
   }
 }
