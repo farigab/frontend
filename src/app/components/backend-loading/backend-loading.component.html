@@ -1,0 +1,49 @@
+<div class="backend-loading-overlay" role="status" aria-live="polite">
+  <div class="backend-loading-container">
+    <div class="loading-content">
+      <div class="logo-section">
+        <img src="../../../assets/logo-bragdev.png" alt="BragDev" class="logo" />
+      </div>
+
+      <div class="spinner-wrapper">
+        <p-progressSpinner styleClass="custom-spinner" strokeWidth="3" [style]="{'width': '80px', 'height': '80px'}" />
+      </div>
+
+      @if (healthService.status().isWarming) {
+      <div class="status-messages">
+        <h2 class="status-title">Warming up backend</h2>
+        <p class="status-description">
+          The backend service is starting up from hibernation.<br />
+          This may take up to 60 seconds...
+        </p>
+
+        <div class="progress-info">
+          <span class="progress-text">
+            Attempt {{ attemptNumber() }} of {{ maxAttempts }}
+          </span>
+          <div class="progress-bar">
+            <div class="progress-fill" [style.width.%]="progressPercentage()"></div>
+          </div>
+        </div>
+      </div>
+      } @else {
+      <div class="status-messages">
+        <h2 class="status-title">Connecting to server</h2>
+        <p class="status-description">Please wait...</p>
+      </div>
+      }
+
+      @if (healthService.status().failedAttempts >= maxAttempts && !healthService.status().isAvailable) {
+      <div class="error-state">
+        <i class="pi pi-exclamation-triangle error-icon"></i>
+        <h3 class="error-title">Connection Failed</h3>
+        <p class="error-description">
+          Unable to connect to the backend service.<br />
+          Please try again in a few moments.
+        </p>
+        <p-button label="Retry Connection" icon="pi pi-refresh" (onClick)="retry()" styleClass="retry-button" />
+      </div>
+      }
+    </div>
+  </div>
+</div>
