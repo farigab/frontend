@@ -6,6 +6,20 @@
   Referrer-Policy: strict-origin-when-cross-origin
   Permissions-Policy: geolocation=(), microphone=(), camera=()
 
+# Service Worker - sem cache e com permissões
+/ngsw-worker.js
+  Cache-Control: no-cache, no-store, must-revalidate
+  Service-Worker-Allowed: /
+
+# Manifest PWA
+/manifest.webmanifest
+  Content-Type: application/manifest+json
+  Cache-Control: public, max-age=3600
+
+# ngsw.json - configuração do service worker
+/ngsw.json
+  Cache-Control: no-cache, no-store, must-revalidate
+
 # Cache agressivo para assets estáticos
 /assets/*
   Cache-Control: public, max-age=31536000, immutable

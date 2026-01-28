@@ -1,0 +1,15 @@
+name = "bragdoc-frontend"
+compatibility_date = "2024-01-01"
+
+[site]
+bucket = "./dist/bragdoc-frontend/browser"
+
+# Configuração para SPA (sem SSR)
+[build]
+command = "npm run build:prod"
+cwd = "."
+watch_dirs = ["src"]
+
+# Desabilitar Functions (apenas assets estáticos)
+[env.production]
+workers_dev = false
