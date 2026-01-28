@@ -1,0 +1,18 @@
+{
+  "enabled": true,
+  "name": "Verify PWA Build on Config Change",
+  "description": "Verifica se o build PWA ainda funciona ao modificar arquivos de configuração críticos",
+  "version": "1",
+  "when": {
+    "type": "fileEdited",
+    "patterns": [
+      "ngsw-config.json",
+      "angular.json",
+      "public/manifest.webmanifest"
+    ]
+  },
+  "then": {
+    "type": "askAgent",
+    "prompt": "Execute `npm run build:prod` e verifique se o build foi bem-sucedido. Confirme que os arquivos PWA (ngsw-worker.js, manifest.webmanifest) foram gerados corretamente em dist/bragdoc-frontend/browser/"
+  }
+}

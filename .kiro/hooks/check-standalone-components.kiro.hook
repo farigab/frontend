@@ -1,0 +1,16 @@
+{
+  "enabled": true,
+  "name": "Check Standalone Component Syntax",
+  "description": "Verifica se novos componentes estão usando a sintaxe standalone do Angular 21",
+  "version": "1",
+  "when": {
+    "type": "fileCreated",
+    "patterns": [
+      "src/app/**/*.component.ts"
+    ]
+  },
+  "then": {
+    "type": "askAgent",
+    "prompt": "Verifique se o componente criado está usando a sintaxia standalone do Angular 21 (com 'imports' array no decorator e sem NgModule). Se não estiver, converta para standalone seguindo as melhores práticas do Angular 21."
+  }
+}
